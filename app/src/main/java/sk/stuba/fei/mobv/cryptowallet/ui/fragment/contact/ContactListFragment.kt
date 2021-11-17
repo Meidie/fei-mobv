@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
+import sk.stuba.fei.mobv.cryptowallet.model.enum.Test
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.ContactListAdapter
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModel
@@ -45,6 +46,9 @@ class ContactListFragment : Fragment() {
                 adapter.submitList(it.sortedBy { c -> c.contactId  })
             }
         })
+
+        // TODO - Delete
+        //contactViewModel.test()
 
         binding.floatingActionButton.setOnClickListener{
             findNavController().navigate(R.id.action_contactListFragment_to_addContactFragment)
