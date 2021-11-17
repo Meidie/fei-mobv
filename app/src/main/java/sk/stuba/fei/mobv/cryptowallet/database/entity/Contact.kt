@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Contact (
 
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    val contactId: Long = 0L,
 
     @ColumnInfo(name = "contact_first_name")
     var firstName: String,

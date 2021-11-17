@@ -42,7 +42,7 @@ class ContactListFragment : Fragment() {
         binding.contactListRecycleView.adapter = adapter
         contactViewModel.allContacts.observe(viewLifecycleOwner, {
             it?.let {
-                adapter.submitList(it.sortedBy { c -> c.id  })
+                adapter.submitList(it.sortedBy { c -> c.contactId  })
             }
         })
 

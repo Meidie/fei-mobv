@@ -22,7 +22,7 @@ class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactRowVie
     class ContactRowViewHolder(private val binding: ContactRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Contact) {
-            binding.rowCount.text = item.id.toString()
+            binding.rowCount.text = item.contactId.toString()
             binding.rowFirstName.text = item.firstName
             binding.rowLastName.text = item.lastName
         }
@@ -39,7 +39,7 @@ class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactRowVie
 
 class ContactDiffCallback : DiffUtil.ItemCallback<Contact>() {
     override fun areItemsTheSame(oldItem: Contact, newItem: Contact): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.contactId == newItem.contactId
     }
 
     override fun areContentsTheSame(oldItem: Contact, newItem: Contact): Boolean {

@@ -6,11 +6,21 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.dao.ContactDao
+import sk.stuba.fei.mobv.cryptowallet.database.dao.StellarAccountDao
+import sk.stuba.fei.mobv.cryptowallet.database.dao.TransactionDao
+import sk.stuba.fei.mobv.cryptowallet.database.entity.StellarAccount
+import sk.stuba.fei.mobv.cryptowallet.database.entity.StellarTransaction
 
-@Database(entities = [Contact::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Contact::class, StellarAccount::class, StellarTransaction::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun contactDao(): ContactDao
+    abstract fun transactionDao(): TransactionDao
+    abstract fun stellarAccountDao(): StellarAccountDao
 
     companion object {
 
