@@ -1,16 +1,14 @@
-package sk.stuba.fei.mobv.cryptowallet.ui.fragment
+package sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
-import sk.stuba.fei.mobv.cryptowallet.databinding.ContactRowBinding
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.ContactListAdapter
@@ -29,8 +27,6 @@ class ContactListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-       // ContactRowBinding
-
         _binding = FragmentContactListBinding.inflate(inflater, container, false)
 
         // ViewModel
@@ -46,7 +42,7 @@ class ContactListFragment : Fragment() {
         binding.contactListRecycleView.adapter = adapter
         contactViewModel.allContacts.observe(viewLifecycleOwner, {
             it?.let {
-                adapter.contactList = it
+                adapter.submitList(it.sortedBy { c -> c.id  })
             }
         })
 

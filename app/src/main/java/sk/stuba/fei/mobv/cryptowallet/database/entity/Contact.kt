@@ -11,7 +11,7 @@ data class Contact (
     val id: Long = 0L,
 
     @ColumnInfo(name = "contact_first_name")
-    var fistName: String,
+    var firstName: String,
 
     @ColumnInfo(name = "contact_last_name")
     var lastName: String,

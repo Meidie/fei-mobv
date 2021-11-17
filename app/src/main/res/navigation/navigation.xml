@@ -7,20 +7,31 @@
 
     <fragment
         android:id="@+id/contactListFragment"
-        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.ContactListFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.ContactListFragment"
         android:label="Contacts"
         tools:layout="@layout/fragment_contact_list" >
         <action
             android:id="@+id/action_contactListFragment_to_addContactFragment"
             app:destination="@id/addContactFragment" />
+        <action
+            android:id="@+id/action_contactListFragment_to_editContactFragment"
+            app:destination="@id/editContactFragment" />
     </fragment>
     <fragment
         android:id="@+id/addContactFragment"
-        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.AddContactFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.AddContactFragment"
         android:label="Add"
         tools:layout="@layout/fragment_add_contact" >
         <action
             android:id="@+id/action_addContactFragment_to_contactListFragment"
+            app:destination="@id/contactListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editContactFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.EditContactFragment"
+        android:label="Update" >
+        <action
+            android:id="@+id/action_editContactFragment_to_contactListFragment"
             app:destination="@id/contactListFragment" />
     </fragment>
 </navigation>

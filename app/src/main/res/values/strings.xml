@@ -6,4 +6,6 @@
     <string name="first_name">First Name</string>
     <string name="key">Key</string>
     <string name="add_contact_button">Add Contact</string>
+    <string name="update">Update</string>
+    <string name="update_contact_button">Update</string>
 </resources>

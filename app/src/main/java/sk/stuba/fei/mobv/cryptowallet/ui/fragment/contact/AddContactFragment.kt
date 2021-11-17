@@ -1,4 +1,4 @@
-package sk.stuba.fei.mobv.cryptowallet.ui.fragment
+package sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAddContactBinding
-import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModelFactory
