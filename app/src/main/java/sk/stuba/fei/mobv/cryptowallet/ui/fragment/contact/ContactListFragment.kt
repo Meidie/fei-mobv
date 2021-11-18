@@ -1,16 +1,15 @@
 package sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
-import sk.stuba.fei.mobv.cryptowallet.model.enum.Test
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.ContactListAdapter
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModel
@@ -43,22 +42,51 @@ class ContactListFragment : Fragment() {
         binding.contactListRecycleView.adapter = adapter
         contactViewModel.allContacts.observe(viewLifecycleOwner, {
             it?.let {
-                adapter.submitList(it.sortedBy { c -> c.contactId  })
+                adapter.submitList(it.sortedBy { c -> c.firstName })
             }
         })
 
         // TODO - Delete
         //contactViewModel.test()
 
-        binding.floatingActionButton.setOnClickListener{
+        binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_contactListFragment_to_addContactFragment)
         }
 
+        setHasOptionsMenu(true)
+
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.delete_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.delete_menu) {
+            deleteAllContacts()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun deleteAllContacts() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes") { _, _ ->
+            contactViewModel.deleteAllContacts()
+            Toast.makeText(
+                requireContext(), "Everything removes successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        builder.setNegativeButton("No") { _, _ -> }
+        builder.setTitle("Delete everything?")
+        builder.setMessage("Are you sure you want to delete everything?")
+        builder.create().show()
     }
 }

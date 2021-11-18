@@ -22,6 +22,10 @@ class ContactRepository(private val dao: ContactDao) : IRepository<Contact> {
         dao.delete(entity)
     }
 
+    suspend fun deleteAll() {
+        dao.deleteAll()
+    }
+
     fun getAllContacts() : LiveData<List<Contact>> {
         return dao.getAllContacts()
     }

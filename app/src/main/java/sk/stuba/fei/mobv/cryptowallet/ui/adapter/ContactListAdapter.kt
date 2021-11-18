@@ -2,11 +2,13 @@ package sk.stuba.fei.mobv.cryptowallet.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.databinding.ContactRowBinding
+import sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.ContactListFragmentDirections
 
 class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactRowViewHolder>(ContactDiffCallback()) {
 
@@ -22,9 +24,17 @@ class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactRowVie
     class ContactRowViewHolder(private val binding: ContactRowBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Contact) {
-            binding.rowCount.text = item.contactId.toString()
             binding.rowFirstName.text = item.firstName
             binding.rowLastName.text = item.lastName
+            binding.contact = item
+
+            binding.contactRow.setOnClickListener {
+                binding.root.findNavController().navigate(
+                    ContactListFragmentDirections.actionContactListFragmentToEditContactFragment(
+                        item
+                    )
+                )
+            }
         }
 
         companion object {
@@ -46,3 +56,4 @@ class ContactDiffCallback : DiffUtil.ItemCallback<Contact>() {
         return oldItem == newItem
     }
 }
+

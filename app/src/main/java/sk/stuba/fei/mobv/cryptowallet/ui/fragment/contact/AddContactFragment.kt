@@ -2,11 +2,11 @@ package sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact
 
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
@@ -43,6 +43,12 @@ class AddContactFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+
     private fun insertContactToDatabase() {
         val firstName = binding.addFirstName.text.toString()
         val lastName = binding.addLastname.text.toString()
@@ -61,14 +67,11 @@ class AddContactFragment : Fragment() {
         }
     }
 
+    // helper methods
+
     private fun areInputsValid(firstName: String, lastName: String, key: String): Boolean {
         return !(TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) || TextUtils.isEmpty(
             key
         ))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }
