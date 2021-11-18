@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "stellar_account_table")
-data class Account (
+data class Account(
 
     @PrimaryKey(autoGenerate = true)
     val accountId: Long = 0L,
@@ -17,5 +17,5 @@ data class Account (
     var cipheredPrivateKey: String,
 
     @ColumnInfo(name = "balance")
-    var balance: Double
+    var balance: String
 )

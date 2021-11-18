@@ -6,7 +6,7 @@ import sk.stuba.fei.mobv.cryptowallet.database.entity.AccountWithTransactions
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
 
 @Dao
-interface StellarAccountDao : IDao<Account> {
+interface AccountDao : IDao<Account> {
 
     @Query("DELETE FROM stellar_account_table")
     suspend fun deleteAll()

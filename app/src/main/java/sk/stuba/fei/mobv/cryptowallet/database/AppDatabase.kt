@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import sk.stuba.fei.mobv.cryptowallet.database.dao.ContactDao
-import sk.stuba.fei.mobv.cryptowallet.database.dao.StellarAccountDao
+import sk.stuba.fei.mobv.cryptowallet.database.dao.AccountDao
 import sk.stuba.fei.mobv.cryptowallet.database.dao.TransactionDao
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
@@ -20,7 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun contactDao(): ContactDao
     abstract fun transactionDao(): TransactionDao
-    abstract fun stellarAccountDao(): StellarAccountDao
+    abstract fun AccountDao(): AccountDao
 
     companion object {
 
