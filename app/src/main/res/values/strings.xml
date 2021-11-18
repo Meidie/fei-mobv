@@ -9,4 +9,10 @@
     <string name="update">Update</string>
     <string name="update_contact_button">Update</string>
     <string name="delete">Delete</string>
+    <string name="recipient">Recipient</string>
+    <string name="amount">Amout</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_transaction">Transaction</string>
+    <string name="nav_contacts">Contacts</string>
+    <string name="home_label">HOME</string>
 </resources>

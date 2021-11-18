@@ -3,12 +3,15 @@ package sk.stuba.fei.mobv.cryptowallet
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import sk.stuba.fei.mobv.cryptowallet.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,8 +19,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupActionBarWithNavController(findNavController(R.id.navHostFragment))
+        val navController = findNavController(R.id.navHostFragment)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.homeFragment, R.id.transactionListFragment, R.id.contactListFragment)
+        )
 
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        binding.bottomNavigation.setupWithNavController(navController)
 //        testCrashlytics()
     }
 
