@@ -5,10 +5,10 @@ import androidx.room.Relation
 
 data class AccountWithTransactions(
 
-    @Embedded val account: StellarAccount,
+    @Embedded val account: Account,
     @Relation(
         parentColumn = "accountId",
         entityColumn = "account_owner_id"
     )
-    val transactions: List<StellarTransaction>
+    val transactions: List<Transaction>
 )

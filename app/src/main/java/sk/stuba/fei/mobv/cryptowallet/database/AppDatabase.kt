@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.dao.ContactDao
 import sk.stuba.fei.mobv.cryptowallet.database.dao.StellarAccountDao
 import sk.stuba.fei.mobv.cryptowallet.database.dao.TransactionDao
-import sk.stuba.fei.mobv.cryptowallet.database.entity.StellarAccount
-import sk.stuba.fei.mobv.cryptowallet.database.entity.StellarTransaction
+import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
+import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
+import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
 
 @Database(
-    entities = [Contact::class, StellarAccount::class, StellarTransaction::class],
+    entities = [Contact::class, Account::class, Transaction::class],
     version = 1,
     exportSchema = false
 )
