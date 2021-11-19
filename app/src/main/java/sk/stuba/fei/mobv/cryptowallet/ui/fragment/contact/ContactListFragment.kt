@@ -11,9 +11,13 @@ import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
-import sk.stuba.fei.mobv.cryptowallet.ui.adapter.ContactListAdapter
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModel
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModelFactory
+import sk.stuba.fei.mobv.cryptowallet.ui.adapter.contact.ContactListAdapter
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
+import androidx.recyclerview.widget.DividerItemDecoration
+
+
+
 
 class ContactListFragment : Fragment() {
 
@@ -40,9 +44,20 @@ class ContactListFragment : Fragment() {
         // RecyclerView
         val adapter = ContactListAdapter()
         binding.contactListRecycleView.adapter = adapter
+        binding.contactListRecycleView.addItemDecoration(
+            DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        )
         contactViewModel.allContacts.observe(viewLifecycleOwner, {
             it?.let {
-                adapter.submitList(it.sortedBy { c -> c.firstName })
+                if (it.isEmpty()) {
+                    binding.contactListRecycleView.visibility = View.GONE
+                    binding.emptyView.visibility = View.VISIBLE
+                } else {
+                    binding.contactListRecycleView.visibility = View.VISIBLE
+                    binding.emptyView.visibility = View.GONE
+                }
+
+                adapter.submitList(it.sortedBy { c -> c.name })
             }
         })
 
@@ -50,7 +65,7 @@ class ContactListFragment : Fragment() {
         //contactViewModel.test()
 
         binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_contactListFragment_to_addContactFragment)
+            findNavController().navigate(R.id.action_contactListFragment_to_contactAddFragment)
         }
 
         setHasOptionsMenu(true)
@@ -86,7 +101,7 @@ class ContactListFragment : Fragment() {
         }
         builder.setNegativeButton("No") { _, _ -> }
         builder.setTitle("Delete everything?")
-        builder.setMessage("Are you sure you want to delete everything?")
+        builder.setMessage("Are you sure you want to delete all contacts?")
         builder.create().show()
     }
 }

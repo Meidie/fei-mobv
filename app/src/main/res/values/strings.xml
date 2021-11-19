@@ -1,20 +1,21 @@
 <resources>
     <string name="app_name">Crypto Wallet</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="add_contact">Add contact</string>
-    <string name="last_name">Last Name</string>
-    <string name="first_name">First Name</string>
-    <string name="key">Key</string>
-    <string name="add_contact_button">Add</string>
+    <string name="new_contact">New contact</string>
+    <string name="contact_detail">Contact detail</string>
+    <string name="name">Name</string>
+    <string name="key">Public key</string>
+    <string name="add_contact_button">Add contact</string>
     <string name="update">Update</string>
-    <string name="update_contact_button">Update</string>
+    <string name="update_contact_button">Update contact</string>
     <string name="delete">Delete</string>
     <string name="recipient">Recipient</string>
-    <string name="amount">Amout</string>
+    <string name="amount">Amount</string>
     <string name="nav_home">Home</string>
-    <string name="nav_transaction">Transaction</string>
+    <string name="nav_transaction">Transactions</string>
     <string name="nav_contacts">Contacts</string>
     <string name="home_label">HOME</string>
+    <string name="no_data_available">No contacts available</string>
     <string name="login">Enter username</string>
     <string name="password">Enter password</string>
     <string name="loginbutton">Login</string>
@@ -28,5 +29,6 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="contact_icon">Contact Icon</string>
 
 </resources>

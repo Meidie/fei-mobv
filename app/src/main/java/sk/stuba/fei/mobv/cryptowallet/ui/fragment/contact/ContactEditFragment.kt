@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.*
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -12,18 +13,18 @@ import androidx.navigation.fragment.navArgs
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
-import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentEditContactBinding
+import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactEditBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModel
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.ContactViewModelFactory
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
 
-class EditContactFragment : Fragment() {
+class ContactEditFragment : Fragment() {
 
-    private val args: EditContactFragmentArgs by navArgs()
+    private val args:  ContactEditFragmentArgs by navArgs()
     private lateinit var contact: Contact
 
     private lateinit var contactViewModel: ContactViewModel
-    private var _binding: FragmentEditContactBinding? = null
+    private var _binding: FragmentContactEditBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -31,7 +32,7 @@ class EditContactFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentEditContactBinding.inflate(inflater, container, false)
+        _binding = FragmentContactEditBinding.inflate(inflater, container, false)
         contact = args.currentContact
 
         val application = requireNotNull(this.activity).application
@@ -45,6 +46,16 @@ class EditContactFragment : Fragment() {
 
         binding.editButton.setOnClickListener {
             updateContactInDatabase()
+        }
+
+        binding.editKeyText.doOnTextChanged { text, _, _, _ ->
+            if (!text!!.startsWith("G")) {
+                binding.editKeyLayout.error = "Key must start with \'G\' character"
+            } else if (text.length > 56) {
+                binding.editKeyLayout.error = "Key must contain 56 alphanumeric characters"
+            } else {
+                binding.editKeyLayout.error = null
+            }
         }
 
         // Add menu
@@ -71,17 +82,16 @@ class EditContactFragment : Fragment() {
     }
 
     private fun updateContactInDatabase() {
-        val firstName = binding.editFirstName.text.toString()
-        val lastName = binding.editLastname.text.toString()
-        val key = binding.editKey.text.toString()
+        val name = binding.editNameText.text.toString()
+        val key = binding.editKeyText.text.toString()
 
-        if (areInputsValid(firstName, lastName, key)) {
-            val updatedContact = Contact(contact.contactId, firstName, lastName, key)
+        if (areInputsValid(name, key)) {
+            val updatedContact = Contact(contact.contactId, name, key)
             contactViewModel.update(updatedContact)
             Toast.makeText(requireContext(), "Contact successfully updated", Toast.LENGTH_SHORT)
                 .show()
 
-            findNavController().navigate(R.id.action_editContactFragment_to_contactListFragment)
+            findNavController().navigate(R.id.action_contactEditFragment_to_contactListFragment)
         } else {
             Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_LONG)
                 .show()
@@ -93,29 +103,39 @@ class EditContactFragment : Fragment() {
         builder.setPositiveButton("Yes") { _, _ ->
             contactViewModel.delete(contact)
             Toast.makeText(
-                requireContext(), "Successfully removed: ${contact.firstName}",
+                requireContext(), "Successfully removed: ${contact.name}",
                 Toast.LENGTH_SHORT
             ).show()
 
-            findNavController().navigate(R.id.action_editContactFragment_to_contactListFragment)
+            findNavController().navigate(R.id.action_contactEditFragment_to_contactListFragment)
         }
         builder.setNegativeButton("No") { _, _ -> }
-        builder.setTitle("Delete ${contact.firstName}")
-        builder.setMessage("Are you sure you want to delete ${contact.firstName}?")
+        builder.setTitle("Delete ${contact.name}")
+        builder.setMessage("Are you sure you want to delete ${contact.name}?")
         builder.create().show()
     }
 
     // helper methods
 
     private fun setDataFromArgs() {
-        binding.editFirstName.setText(contact.firstName)
-        binding.editLastname.setText(contact.lastName)
-        binding.editKey.setText(contact.publicKey)
+        binding.editNameText.setText(contact.name)
+        binding.editKeyText.setText(contact.publicKey)
     }
 
-    private fun areInputsValid(firstName: String, lastName: String, key: String): Boolean {
-        return !(TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) || TextUtils.isEmpty(
-            key
-        ))
+    private fun areInputsValid(name: String, key: String): Boolean {
+
+        var valid = true
+
+        if (TextUtils.isEmpty(name)) {
+            valid = false
+            binding.editNameLayout.error = "Value is required!"
+        }
+
+        if (TextUtils.isEmpty(key)) {
+            valid = false
+            binding.editKeyLayout.error = "Value is required!"
+        }
+
+        return valid
     }
 }

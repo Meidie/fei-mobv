@@ -33,30 +33,30 @@
         android:id="@+id/contactListFragment"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.ContactListFragment"
         android:label="Contacts"
-        tools:layout="@layout/fragment_contact_list" >
+        tools:layout="@layout/fragment_contact_list">
         <action
-            android:id="@+id/action_contactListFragment_to_addContactFragment"
-            app:destination="@id/addContactFragment" />
+            android:id="@+id/action_contactListFragment_to_contactAddFragment"
+            app:destination="@id/contactAddFragment" />
         <action
-            android:id="@+id/action_contactListFragment_to_editContactFragment"
-            app:destination="@id/editContactFragment" />
+            android:id="@+id/action_contactListFragment_to_contactEditFragment"
+            app:destination="@id/contactEditFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addContactFragment"
-        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.AddContactFragment"
-        android:label="Add"
-        tools:layout="@layout/fragment_add_contact" >
+        android:id="@+id/contactAddFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.ContactAddFragment"
+        android:label="@string/new_contact"
+        tools:layout="@layout/fragment_contact_add">
         <action
-            android:id="@+id/action_addContactFragment_to_contactListFragment"
+            android:id="@+id/action_contactAddFragment_to_contactListFragment"
             app:destination="@id/contactListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editContactFragment"
-        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.EditContactFragment"
-        android:label="Update"
-        tools:layout="@layout/fragment_edit_contact">
+        android:id="@+id/contactEditFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.ContactEditFragment"
+        android:label="@string/contact_detail"
+        tools:layout="@layout/fragment_contact_edit">
         <action
-            android:id="@+id/action_editContactFragment_to_contactListFragment"
+            android:id="@+id/action_contactEditFragment_to_contactListFragment"
             app:destination="@id/contactListFragment" />
         <argument
             android:name="currentContact"
@@ -72,7 +72,13 @@
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.TransactionListFragment"
         android:label="Transactions"
         tools:layout="@layout/fragment_transaction_list" />
-    <action android:id="@+id/action_global_transactionListFragment" app:destination="@id/transactionListFragment" />
-    <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
-    <action android:id="@+id/action_global_contactListFragment" app:destination="@id/contactListFragment" />
+    <action
+        android:id="@+id/action_global_transactionListFragment"
+        app:destination="@id/transactionListFragment" />
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment" />
+    <action
+        android:id="@+id/action_global_contactListFragment"
+        app:destination="@id/contactListFragment" />
 </navigation>

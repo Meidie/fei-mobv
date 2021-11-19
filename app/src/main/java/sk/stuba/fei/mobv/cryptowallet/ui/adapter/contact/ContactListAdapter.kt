@@ -1,4 +1,4 @@
-package sk.stuba.fei.mobv.cryptowallet.ui.adapter
+package sk.stuba.fei.mobv.cryptowallet.ui.adapter.contact
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,8 @@ import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.databinding.ContactRowBinding
 import sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact.ContactListFragmentDirections
 
-class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactRowViewHolder>(ContactDiffCallback()) {
+class ContactListAdapter :
+    ListAdapter<Contact, ContactListAdapter.ContactRowViewHolder>(ContactDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactRowViewHolder {
         return ContactRowViewHolder.create(parent)
@@ -21,16 +22,15 @@ class ContactListAdapter : ListAdapter<Contact, ContactListAdapter.ContactRowVie
         holder.bind(currentItem)
     }
 
-    class ContactRowViewHolder(private val binding: ContactRowBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ContactRowViewHolder(private val binding: ContactRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Contact) {
-            binding.rowFirstName.text = item.firstName
-            binding.rowLastName.text = item.lastName
             binding.contact = item
-
+            //TODO cez databinding?
             binding.contactRow.setOnClickListener {
                 binding.root.findNavController().navigate(
-                    ContactListFragmentDirections.actionContactListFragmentToEditContactFragment(
+                    ContactListFragmentDirections.actionContactListFragmentToContactEditFragment(
                         item
                     )
                 )

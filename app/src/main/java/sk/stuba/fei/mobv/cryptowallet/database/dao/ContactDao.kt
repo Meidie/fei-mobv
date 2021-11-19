@@ -13,6 +13,6 @@ interface ContactDao : IDao<Contact> {
     @Query("SELECT * from contact_table WHERE contactId = :id")
     suspend fun find(id: Long): Contact?
 
-    @Query("SELECT * FROM contact_table ORDER BY contact_first_name DESC")
+    @Query("SELECT * FROM contact_table ORDER BY contact_name DESC")
     fun getAllContacts(): LiveData<List<Contact>>
 }

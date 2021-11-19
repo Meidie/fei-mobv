@@ -1,4 +1,4 @@
-package sk.stuba.fei.mobv.cryptowallet.viewmodel
+package sk.stuba.fei.mobv.cryptowallet.viewmodel.contact
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
-import sk.stuba.fei.mobv.cryptowallet.model.enum.Test
+import sk.stuba.fei.mobv.cryptowallet.test.Test
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 
 class ContactViewModel(private val repository: ContactRepository) : ViewModel() {

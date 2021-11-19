@@ -1,4 +1,4 @@
-package sk.stuba.fei.mobv.cryptowallet.viewmodel
+package sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

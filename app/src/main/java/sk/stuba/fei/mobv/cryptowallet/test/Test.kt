@@ -1,4 +1,4 @@
-package sk.stuba.fei.mobv.cryptowallet.model.enum
+package sk.stuba.fei.mobv.cryptowallet.test
 
 import android.util.Log
 import androidx.fragment.app.FragmentActivity

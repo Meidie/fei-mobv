@@ -13,11 +13,8 @@ data class Contact (
     @PrimaryKey(autoGenerate = true)
     val contactId: Long = 0L,
 
-    @ColumnInfo(name = "contact_first_name")
-    var firstName: String,
-
-    @ColumnInfo(name = "contact_last_name")
-    var lastName: String,
+    @ColumnInfo(name = "contact_name")
+    var name: String,
 
     @ColumnInfo(name = "public_key")
     var publicKey: String

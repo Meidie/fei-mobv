@@ -6,58 +6,49 @@
     <data>
         <variable
             name="contact"
-            type="sk.stuba.fei.mobv.cryptowallet.database.entity.Contact"/>
+            type="sk.stuba.fei.mobv.cryptowallet.database.entity.Contact" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contact_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24sp"
-        android:id="@+id/contact_row">
+        android:padding="24sp">
 
         <ImageView
             android:id="@+id/rowImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:contentDescription="@string/contact_icon"
+            android:src="@drawable/ic_person"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_person"/>
-
-<!--        <TextView-->
-<!--            android:id="@+id/rowCount"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="40sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintVertical_bias="1.0"-->
-<!--            tools:text="1" />-->
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/rowFirstName"
+            android:id="@+id/rowName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:text="@{contact.name}"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rowImage"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.486"
-            tools:text="@string/first_name" />
+            tools:text="@string/name" />
 
-        <TextView
-            android:id="@+id/rowLastName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
+        <ImageView
+            android:id="@+id/rowSideIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/contact_detail"
+            android:src="@drawable/ic_chevron_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.128"
-            app:layout_constraintStart_toEndOf="@+id/rowFirstName"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/last_name" />
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/rowName"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
