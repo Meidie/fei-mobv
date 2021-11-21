@@ -8,21 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+
+
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
+
+
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentRegisterBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
-import org.stellar.sdk.Server;
-import org.stellar.sdk.responses.AccountResponse;
-import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
+
+
+
+
+
 
 
 class RegisterFragment : Fragment() {
@@ -58,38 +61,24 @@ class RegisterFragment : Fragment() {
         return binding.root
     }
 
+
     private fun createAccount() {
         val pin = binding.pin.text.toString()
+
         if(areInputsValid(pin)) {
             val pair: KeyPair = KeyPair.random()
-            val queue = Volley.newRequestQueue(this.activity)
-            val url = String.format("https://friendbot.stellar.org/?addr=%s", pair.accountId)
-
-            val stringRequest = StringRequest(
-                Request.Method.GET, url,
-                { response ->
-                    val server = Server("https://horizon-testnet.stellar.org")
-                    val accountResponse: AccountResponse = server.accounts().account(pair.accountId)
-                    val account = Account(0, pair.accountId, pin + pair.secretSeed, accountResponse.balances.get(0).getBalance())
-                    accountViewModel.insert(account)
-
-                    Toast.makeText(requireContext(), "Successfully logged", Toast.LENGTH_SHORT)
-                        .show()
-                },
-                {
-                    Log.e("CREATE_ACCOUNT", " That didn't work!")
-                })
-
-            queue.add(stringRequest)
+            accountViewModel.insert(pin, pair);
+            findNavController().navigate(R.id.action_global_homeFragment)
         } else {
-            Toast.makeText(requireContext(), "Pin must contains 4 digits", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(requireContext(), "Zly pin do piče", Toast.LENGTH_LONG).show()
+            Log.d("CREATE_ACCOUNT", "zly pin do pice")
         }
     }
 
 
+
     private fun areInputsValid(pin: String): Boolean {
-        return !(TextUtils.isEmpty(pin.toString()) && pin.length == 4)
+        return !TextUtils.isEmpty(pin) && pin.length == 4
     }
 
     override fun onDestroy() {
