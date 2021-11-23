@@ -4,6 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.fragment.authentication.RegisterFragment">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

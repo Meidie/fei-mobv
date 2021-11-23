@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.navHostFragment)
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeFragment, R.id.transactionListFragment, R.id.contactListFragment)
+            setOf(R.id.homeFragment, R.id.transactionListFragment, R.id.contactListFragment,
+            R.id.loginFragment)
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -37,26 +38,10 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigation.visibility = View.VISIBLE
             }
         }
-
-//        testCrashlytics()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.navHostFragment)
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
-
-
-//    private fun testCrashlytics(){
-//        val crashButton = Button(this)
-//        crashButton.text = "Test Crash"
-//        crashButton.setOnClickListener {
-//            throw RuntimeException("Test Crash") // Force a crash
-//        }
-//
-//        addContentView(crashButton, ViewGroup.LayoutParams(
-//            ViewGroup.LayoutParams.MATCH_PARENT,
-//            ViewGroup.LayoutParams.WRAP_CONTENT))
-//
-//    }
 }
