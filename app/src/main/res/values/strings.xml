@@ -35,4 +35,9 @@
     <string name="login_failed">"Login failed"</string>
     <string name="contact_icon">Contact Icon</string>
 
+    <string name="add_amount">Amount</string>
+    <string name="send_transaction_button">Send transaction</string>
+    <string name="add_transaction">Add transaction</string>
+    <string name="add_new_transaction">Add new transaction</string>
+    <string name="select_from_contacts">Select from contacts</string>
 </resources>

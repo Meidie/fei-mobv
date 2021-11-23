@@ -71,14 +71,21 @@
         android:id="@+id/transactionListFragment"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.TransactionListFragment"
         android:label="Transactions"
-        tools:layout="@layout/fragment_transaction_list" />
-    <action
-        android:id="@+id/action_global_transactionListFragment"
-        app:destination="@id/transactionListFragment" />
-    <action
-        android:id="@+id/action_global_homeFragment"
-        app:destination="@id/homeFragment" />
-    <action
-        android:id="@+id/action_global_contactListFragment"
-        app:destination="@id/contactListFragment" />
+        tools:layout="@layout/fragment_transaction_list" >
+        <action
+            android:id="@+id/action_transactionListFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment" />
+    </fragment>
+    <action android:id="@+id/action_global_transactionListFragment" app:destination="@id/transactionListFragment" />
+    <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
+    <action android:id="@+id/action_global_contactListFragment" app:destination="@id/contactListFragment" />
+    <fragment
+        android:id="@+id/addTransactionFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.AddTransactionFragment"
+        android:label="New transaction"
+        tools:layout="@layout/fragment_add_transaction">
+        <action
+            android:id="@+id/action_addTransactionFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment" />
+    </fragment>
 </navigation>
