@@ -7,9 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity"
-        android:id="@+id/body_content"
-        android:background="@drawable/background">
-
+        android:id="@+id/body_content">
 
         <fragment
             android:id="@+id/navHostFragment"
@@ -28,6 +26,4 @@
             app:menu="@menu/bottom_navigation"
             android:background="?android:attr/windowBackground" />
     </RelativeLayout>
-
-
 </layout>

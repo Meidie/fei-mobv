@@ -57,7 +57,7 @@ class AccountViewModel(
 
                 val accId = accountRepository.insert(
                     Account(
-                        0L, pair.accountId, String(pair.secretSeed), cipherData,
+                        0L, pair.accountId, cipherData,
                         Pin(hashedPin.salt, hashedPin.secretKey.encoded),
                         true
                     )

@@ -14,8 +14,6 @@ data class Account(
     @ColumnInfo(name = "public_key")
     val publicKey: String,
 
-    @ColumnInfo(name = "private_key")
-    val cipheredPrivateKey: String,
 
     @Embedded(prefix = "pk_")
     val privateKeyData: CipherData?,
