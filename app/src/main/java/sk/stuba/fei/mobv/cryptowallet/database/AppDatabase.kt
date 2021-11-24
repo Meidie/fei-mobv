@@ -4,23 +4,26 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import sk.stuba.fei.mobv.cryptowallet.database.dao.ContactDao
 import sk.stuba.fei.mobv.cryptowallet.database.dao.AccountDao
+import sk.stuba.fei.mobv.cryptowallet.database.dao.BalanceDao
+import sk.stuba.fei.mobv.cryptowallet.database.dao.ContactDao
 import sk.stuba.fei.mobv.cryptowallet.database.dao.TransactionDao
-import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
+import sk.stuba.fei.mobv.cryptowallet.database.entity.Balance
+import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
 
 @Database(
-    entities = [Contact::class, Account::class, Transaction::class],
+    entities = [Contact::class, Account::class, Transaction::class, Balance::class],
     version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-
+    
+    abstract fun accountDao(): AccountDao
+    abstract fun balanceDao(): BalanceDao
     abstract fun contactDao(): ContactDao
     abstract fun transactionDao(): TransactionDao
-    abstract fun AccountDao(): AccountDao
 
     companion object {
 

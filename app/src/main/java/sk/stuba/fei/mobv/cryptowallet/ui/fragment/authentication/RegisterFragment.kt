@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
@@ -17,12 +16,13 @@ import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentRegisterBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
+import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
 
 class RegisterFragment : Fragment() {
     private lateinit var accountViewModel: AccountViewModel
-    private  var _binding: FragmentRegisterBinding? = null
+    private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
 
@@ -38,22 +38,25 @@ class RegisterFragment : Fragment() {
         val database = AppDatabase.getDatabase(application)
         accountViewModel = ViewModelProvider(
             this,
-            AccountViewModelFactory(AccountRepository(database.AccountDao(), RemoteDataSource.getStellarApi()))
-        ).get(AccountViewModel::class.java)
+            AccountViewModelFactory(
+                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi()),
+                BalanceRepository(database.balanceDao())
+            )
+        )[AccountViewModel::class.java]
 
         binding.viewModel = accountViewModel
-        binding.registerbutton.setOnClickListener{
+        binding.registerbutton.setOnClickListener {
             createAccount()
         }
 
         // TODO asi by to malo byt cez Data Bindingu
-        binding.loginbutton.setOnClickListener{
+        binding.loginbutton.setOnClickListener {
             findNavController().navigate(R.id.action_register_to_login)
         }
 
         accountViewModel.accountRegistrationResponse.observe(viewLifecycleOwner, {
 
-            if(it.isSuccessful){
+            if (it.isSuccessful) {
                 Log.d("Account Created", it?.isSuccessful.toString())
                 findNavController().navigate(R.id.action_global_homeFragment)
             } else {

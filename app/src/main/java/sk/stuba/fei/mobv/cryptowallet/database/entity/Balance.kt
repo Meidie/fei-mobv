@@ -4,21 +4,18 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "transaction_table")
-data class Transaction(
+@Entity(tableName = "balance_table")
+data class Balance(
 
     @PrimaryKey(autoGenerate = true)
-    val transactionId: Long,
+    val balanceId: Long = 0L,
 
     @ColumnInfo(name = "account_owner_id")
-    var accountOwnerId: Long,
+    val accountOwnerId: Long,
+
+    @ColumnInfo(name = "currency")
+    var currency: String,
 
     @ColumnInfo(name = "amount")
     var amount: String,
-
-    @ColumnInfo(name = "transaction_type")
-    var type: TransactionType,
-
-    @ColumnInfo(name = "public_key")
-    var publicKey: String
 )

@@ -6,12 +6,12 @@ import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
 
 class TransactionRepository(private val dao: TransactionDao) : IRepository<Transaction> {
 
-    override suspend fun find(id: Long) : Transaction? {
+    override suspend fun find(id: Long): Transaction? {
         return dao.find(id)
     }
 
-    override suspend fun insert(entity: Transaction) {
-        dao.insert(entity)
+    override suspend fun insert(entity: Transaction): Long {
+        return dao.insert(entity)
     }
 
     override suspend fun update(entity: Transaction) {
@@ -22,7 +22,7 @@ class TransactionRepository(private val dao: TransactionDao) : IRepository<Trans
         dao.delete(entity)
     }
 
-    fun getAllTransactions() : LiveData<List<Transaction>> {
+    fun getAllTransactions(): LiveData<List<Transaction>> {
         return dao.getAllTransactions()
     }
 }

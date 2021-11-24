@@ -10,6 +10,7 @@ import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentHomeBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
+import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
 
@@ -32,9 +33,10 @@ class HomeFragment : Fragment() {
         accountViewModel = ViewModelProvider(
             this,
             AccountViewModelFactory(
-                AccountRepository(database.AccountDao(), RemoteDataSource.getStellarApi())
+                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi()),
+                BalanceRepository(database.balanceDao())
             )
-        ).get(AccountViewModel::class.java)
+        )[AccountViewModel::class.java]
 
         return binding.root
     }

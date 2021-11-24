@@ -13,6 +13,9 @@ data class Contact (
     @PrimaryKey(autoGenerate = true)
     val contactId: Long = 0L,
 
+    @ColumnInfo(name = "account_owner_id")
+    var accountOwnerId: Long,
+
     @ColumnInfo(name = "contact_name")
     var name: String,
 

@@ -4,29 +4,29 @@ import androidx.lifecycle.LiveData
 import sk.stuba.fei.mobv.cryptowallet.database.dao.ContactDao
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 
-class ContactRepository(private val dao: ContactDao) : IRepository<Contact> {
+class ContactRepository(private val contactDao: ContactDao) : IRepository<Contact> {
 
-    override suspend fun find(id: Long) : Contact? {
-        return dao.find(id)
+    override suspend fun find(id: Long): Contact? {
+        return contactDao.find(id)
     }
 
-    override suspend fun insert(entity: Contact) {
-        dao.insert(entity)
+    override suspend fun insert(entity: Contact): Long {
+        return contactDao.insert(entity)
     }
 
     override suspend fun update(entity: Contact) {
-        dao.update(entity)
+        contactDao.update(entity)
     }
 
     override suspend fun delete(entity: Contact) {
-        dao.delete(entity)
+        contactDao.delete(entity)
     }
 
     suspend fun deleteAll() {
-        dao.deleteAll()
+        contactDao.deleteAll()
     }
 
-    fun getAllContacts() : LiveData<List<Contact>> {
-        return dao.getAllContacts()
+    fun getAllContacts(): LiveData<List<Contact>> {
+        return contactDao.getAllContactActiveAccount()
     }
 }

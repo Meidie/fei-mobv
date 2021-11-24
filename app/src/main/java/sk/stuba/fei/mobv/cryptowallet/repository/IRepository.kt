@@ -4,7 +4,7 @@ interface IRepository<T> {
 
     suspend fun find(id: Long) : T?
 
-    suspend fun insert(entity : T)
+    suspend fun insert(entity : T) : Long
 
     suspend fun update(entity : T)
 

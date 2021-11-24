@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
+import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
-import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactAddBinding
+import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
@@ -34,8 +35,11 @@ class ContactAddFragment : Fragment() {
         val database = AppDatabase.getDatabase(application)
         contactViewModel = ViewModelProvider(
             this,
-            ContactViewModelFactory(ContactRepository(database.contactDao()))
-        ).get(ContactViewModel::class.java)
+            ContactViewModelFactory(
+                ContactRepository(database.contactDao()),
+                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi())
+            )
+        )[ContactViewModel::class.java]
 
         binding.addButton.setOnClickListener {
             insertContactToDatabase()
@@ -64,8 +68,7 @@ class ContactAddFragment : Fragment() {
         val key = binding.addKeyText.text.toString()
 
         if (areInputsValid(firstName, key)) {
-            val newContact = Contact(0, firstName, key)
-            contactViewModel.insert(newContact)
+            contactViewModel.insert(firstName, key)
             Toast.makeText(requireContext(), "Contact successfully added", Toast.LENGTH_SHORT)
                 .show()
 
@@ -75,7 +78,6 @@ class ContactAddFragment : Fragment() {
                 .show()
         }
     }
-
 
     // helper methods
 

@@ -11,16 +11,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import sk.stuba.fei.mobv.cryptowallet.R
+import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactEditBinding
+import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
 
 class ContactEditFragment : Fragment() {
 
-    private val args:  ContactEditFragmentArgs by navArgs()
+    private val args: ContactEditFragmentArgs by navArgs()
     private lateinit var contact: Contact
 
     private lateinit var contactViewModel: ContactViewModel
@@ -39,8 +41,11 @@ class ContactEditFragment : Fragment() {
         val database = AppDatabase.getDatabase(application)
         contactViewModel = ViewModelProvider(
             this,
-            ContactViewModelFactory(ContactRepository(database.contactDao()))
-        ).get(ContactViewModel::class.java)
+            ContactViewModelFactory(
+                ContactRepository(database.contactDao()),
+                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi())
+            )
+        )[ContactViewModel::class.java]
 
         setDataFromArgs()
 
@@ -86,7 +91,7 @@ class ContactEditFragment : Fragment() {
         val key = binding.editKeyText.text.toString()
 
         if (areInputsValid(name, key)) {
-            val updatedContact = Contact(contact.contactId, name, key)
+            val updatedContact = Contact(contact.contactId, contact.accountOwnerId, name, key)
             contactViewModel.update(updatedContact)
             Toast.makeText(requireContext(), "Contact successfully updated", Toast.LENGTH_SHORT)
                 .show()

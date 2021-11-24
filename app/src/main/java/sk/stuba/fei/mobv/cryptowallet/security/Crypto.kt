@@ -1,6 +1,7 @@
 package sk.stuba.fei.mobv.cryptowallet.security
 
 import android.util.Base64
+import sk.stuba.fei.mobv.cryptowallet.database.entity.CipherData
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
@@ -16,7 +17,7 @@ class Crypto {
         private const val KEY_DERIVATION_FUNCTION = "PBKDF2WithHmacSHA1"
     }
 
-    private val secretKeyGenerator: SecretKeyGenerator =
+    val secretKeyGenerator: SecretKeyGenerator =
         SecretKeyGenerator(KEY_LENGTH, SALT_LENGTH, ALGORITHM, KEY_DERIVATION_FUNCTION)
     private val initializationVectorGenerator: InitializationVectorGenerator =
         InitializationVectorGenerator(IV_SIZE)

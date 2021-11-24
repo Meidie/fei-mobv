@@ -6,37 +6,38 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
-import sk.stuba.fei.mobv.cryptowallet.test.Test
+import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 
-class ContactViewModel(private val repository: ContactRepository) : ViewModel() {
+class ContactViewModel(
+    private val contactRepository: ContactRepository,
+    private val accountRepository: AccountRepository
+) : ViewModel() {
 
-    val allContacts: LiveData<List<Contact>> = repository.getAllContacts()
+    val allContacts: LiveData<List<Contact>> = contactRepository.getAllContacts()
 
     init {
 
     }
 
-    // TODO - delete
-    fun test(){
-        viewModelScope.launch(Dispatchers.IO) {
-            Test().getAccount("GBOWAUCRCZPPI5WE6RAMRNHILHVZAI6SHIFTXRKDECIKK4273H755I37")
-        }
+    fun insert(contact: Contact) = viewModelScope.launch(Dispatchers.IO) {
+        contactRepository.insert(contact)
     }
 
-    fun insert(contact: Contact) = viewModelScope.launch {
-        repository.insert(contact)
+    fun insert(name: String, key: String) = viewModelScope.launch(Dispatchers.IO) {
+        val activeAccount = accountRepository.getActiveAccount()
+        contactRepository.insert(Contact(0, activeAccount.accountId, name, key))
     }
 
-    fun update(contact: Contact) = viewModelScope.launch {
-        repository.update(contact)
+    fun update(contact: Contact) = viewModelScope.launch(Dispatchers.IO) {
+        contactRepository.update(contact)
     }
 
-    fun delete(contact: Contact) = viewModelScope.launch {
-        repository.delete(contact)
+    fun delete(contact: Contact) = viewModelScope.launch(Dispatchers.IO) {
+        contactRepository.delete(contact)
     }
 
-    fun deleteAllContacts() = viewModelScope.launch {
-        repository.deleteAll()
+    fun deleteAllContacts() = viewModelScope.launch(Dispatchers.IO) {
+        contactRepository.deleteAll()
     }
 }

@@ -7,17 +7,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import sk.stuba.fei.mobv.cryptowallet.R
+import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
+import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.contact.ContactListAdapter
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
-import androidx.recyclerview.widget.DividerItemDecoration
-
-
-
 
 class ContactListFragment : Fragment() {
 
@@ -38,8 +37,11 @@ class ContactListFragment : Fragment() {
         val database = AppDatabase.getDatabase(application)
         contactViewModel = ViewModelProvider(
             this,
-            ContactViewModelFactory(ContactRepository(database.contactDao()))
-        ).get(ContactViewModel::class.java)
+            ContactViewModelFactory(
+                ContactRepository(database.contactDao()),
+                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi())
+            )
+        )[ContactViewModel::class.java]
 
         // RecyclerView
         val adapter = ContactListAdapter()
@@ -60,9 +62,6 @@ class ContactListFragment : Fragment() {
                 adapter.submitList(it.sortedBy { c -> c.name })
             }
         })
-
-        // TODO - Delete
-        //contactViewModel.test()
 
         binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_contactListFragment_to_contactAddFragment)

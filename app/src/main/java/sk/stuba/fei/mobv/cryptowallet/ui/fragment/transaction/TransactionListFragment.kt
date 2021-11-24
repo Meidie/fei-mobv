@@ -15,14 +15,18 @@ import sk.stuba.fei.mobv.cryptowallet.ui.adapter.TransactionListAdapter
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.TransactionViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModel
 
-class TransactionListFragment: Fragment(R.layout.fragment_transaction_list) {
+class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
 
     private var _binding: FragmentTransactionListBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var transactionViewModel: TransactionViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         _binding = FragmentTransactionListBinding.inflate(inflater, container, false)
 
@@ -31,28 +35,36 @@ class TransactionListFragment: Fragment(R.layout.fragment_transaction_list) {
         transactionViewModel = ViewModelProvider(
             this,
             TransactionViewModelFactory(TransactionRepository(database.transactionDao()))
-        ).get(TransactionViewModel::class.java)
+        )[TransactionViewModel::class.java]
 
         val adapter = TransactionListAdapter()
         binding.transactionListRecycleView.adapter = adapter
         transactionViewModel.allContacts.observe(viewLifecycleOwner, {
             it?.let {
+
+                if (it.isEmpty()) {
+                    binding.transactionListRecycleView.visibility = View.GONE
+                    binding.emptyView.visibility = View.VISIBLE
+                } else {
+                    binding.transactionListRecycleView.visibility = View.VISIBLE
+                    binding.emptyView.visibility = View.GONE
+                }
+
                 adapter.submitList(it.sortedBy { t -> t.transactionId })
             }
         })
 
         binding.addTransactionButton.setOnClickListener {
-            val action = TransactionListFragmentDirections.actionTransactionListFragmentToAddTransactionFragment()
+            val action =
+                TransactionListFragmentDirections.actionTransactionListFragmentToAddTransactionFragment()
             findNavController().navigate(action)
         }
 
         return binding.root
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
 }

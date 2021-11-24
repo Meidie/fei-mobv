@@ -15,11 +15,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
+import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
 import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionType
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAddTransactionBinding
+import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.TransactionViewModelFactory
@@ -36,20 +38,30 @@ class AddTransactionFragment : Fragment() {
     private val binding get() = _binding!!
     private var contactsList: List<Contact> = emptyList()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentAddTransactionBinding.inflate(inflater, container, false)
 
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)
+
+        // TODO co som cital tak co fragment to max jeden view model cize tato logika by asi mala
+        //  byt presunuta do transactionViewModel
         contactViewModel = ViewModelProvider(
             this,
-            ContactViewModelFactory(ContactRepository(database.contactDao()))
-        ).get(ContactViewModel::class.java)
+            ContactViewModelFactory(
+                ContactRepository(database.contactDao()),
+                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi())
+            )
+        )[ContactViewModel::class.java]
 
         transactionViewModel = ViewModelProvider(
             this,
             TransactionViewModelFactory(TransactionRepository(database.transactionDao()))
-        ).get(TransactionViewModel::class.java)
+        )[TransactionViewModel::class.java]
 
         val contactsString: MutableList<String> = ArrayList()
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, contactsString)
@@ -58,19 +70,21 @@ class AddTransactionFragment : Fragment() {
 
         contactViewModel.allContacts.observe(viewLifecycleOwner, { contacts ->
             contactsList = contacts
-            for ((_, name) in contacts) {
+            for ((_, _, name) in contacts) {
                 contactsString.add(name)
             }
             arrayAdapter.notifyDataSetChanged()
         })
 
-        binding.contactSelect.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            binding.publicKey.setText(contactsList.filter { it.name.equals(binding.contactSelect.text.toString()) }.first().publicKey)
-        }
+        binding.contactSelect.onItemClickListener =
+            AdapterView.OnItemClickListener { adapterView, view, i, l ->
+                binding.publicKey.setText(contactsList.filter { it.name.equals(binding.contactSelect.text.toString()) }
+                    .first().publicKey)
+            }
 
         binding.contactSelect.doOnTextChanged { text, _, _, _ ->
             Log.i("SELECTED", text.toString())
-            if(TextUtils.isEmpty(text)){
+            if (TextUtils.isEmpty(text)) {
                 binding.recipientLayout.error = "Recipient is required"
             } else {
                 binding.recipientLayout.error = null
@@ -79,7 +93,7 @@ class AddTransactionFragment : Fragment() {
 
         binding.amount.doOnTextChanged { text, _, _, _ ->
             Log.i("AMOUNT", text!!.toString())
-            if(text.startsWith("-")){
+            if (text.startsWith("-")) {
                 binding.amount.setText("")
                 binding.amountLayout.error = "Negative amount not allowed!"
             } else {
@@ -101,17 +115,23 @@ class AddTransactionFragment : Fragment() {
         val amount = binding.amount.text
 
         if (isInputValid(recipient, amount)) {
-            val contact = contactsList.filter { it.name.equals(binding.contactSelect.text.toString()) }.first()
-            val newTransaction = Transaction(0L, contact.contactId, amount.toString().toDouble(), TransactionType.CREDIT, contact.publicKey)
+            val contact =
+                contactsList.first { it.name == binding.contactSelect.text.toString() }
+            // TODO namapovat na accountId
+            val newTransaction =
+                Transaction(0L, 0L, amount.toString(), TransactionType.CREDIT, contact.publicKey)
             transactionViewModel.insert(newTransaction)
             // TODO volanie stellar api
-            Toast.makeText(requireContext(), "Transaction successfully added", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Transaction successfully added", Toast.LENGTH_SHORT)
+                .show()
 
-            val action = AddTransactionFragmentDirections.actionAddTransactionFragmentToTransactionListFragment()
+            val action =
+                AddTransactionFragmentDirections.actionAddTransactionFragmentToTransactionListFragment()
             findNavController().navigate(action)
 
         } else {
-            Toast.makeText(requireContext(), "Please fill reqiured fields", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Please fill reqiured fields", Toast.LENGTH_LONG)
+                .show()
         }
     }
 
@@ -122,12 +142,12 @@ class AddTransactionFragment : Fragment() {
 
         var valid = true
 
-        if (TextUtils.isEmpty(recipient)){
+        if (TextUtils.isEmpty(recipient)) {
             valid = false
             binding.recipientLayout.error = "Recipient is required"
         }
 
-        if(TextUtils.isEmpty(amount)){
+        if (TextUtils.isEmpty(amount)) {
             valid = false
             binding.amountLayout.error = "Amount is required"
         }

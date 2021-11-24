@@ -1,6 +1,18 @@
-package sk.stuba.fei.mobv.cryptowallet.security
+package sk.stuba.fei.mobv.cryptowallet.database.entity
 
-data class CipherData(val salt: ByteArray, val iv: ByteArray, val cipherText: ByteArray) {
+import androidx.room.ColumnInfo
+
+data class CipherData(
+
+    @ColumnInfo(name = "salt", typeAffinity = ColumnInfo.BLOB)
+    val salt: ByteArray,
+
+    @ColumnInfo(name = "initialization_vector", typeAffinity = ColumnInfo.BLOB)
+    val iv: ByteArray,
+
+    @ColumnInfo(name = "cipher_text", typeAffinity = ColumnInfo.BLOB)
+    val cipherText: ByteArray
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
