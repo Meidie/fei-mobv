@@ -14,49 +14,51 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background"
         >
+
 
         <TextView
             android:id="@+id/heading"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginTop="48dp"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="40sp"
             android:textColor="@color/white"
+            android:textSize="40sp"
             android:textStyle="bold"
-            android:layout_marginTop="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
             tools:text="Crypto Wallet" />
 
-        <EditText
-            android:id="@+id/login"
-            android:layout_width="match_parent"
+        <com.chaos.view.PinView
+            android:id="@+id/pin"
+            style="@style/PinWidget.PinView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="16dp"
-            android:height="48dp"
-            android:autofillHints=".AUTOFILL_HINT_NAME"
-            android:ems="10"
-            android:padding="5dip"
-            android:hint="Enter Private Key"
-            android:drawablePadding="10dp"
-            android:textSize="18sp"
+            android:layout_marginTop="30dp"
+            android:cursorVisible="true"
+            android:inputType="numberPassword"
+            android:padding="@dimen/pv_pin_view_item_spacing"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:drawableStart="@drawable/ic_baseline_person_24"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:background="@drawable/roundedcorners"
+            app:cursorColor="@color/white"
+            app:cursorWidth="2dp"
+            app:hideLineWhenFilled="false"
+            app:itemCount="4"
+            app:itemHeight="48dp"
+            app:itemRadius="4dp"
+            app:itemSpacing="0dp"
+            app:itemWidth="48dp"
+            app:lineColor="@color/white"
+            app:lineWidth="2dp"
+            app:viewType="rectangle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/heading"
-      />
+            app:layout_constraintTop_toBottomOf="@+id/heading"
+            />
 
 
         <Button
@@ -76,7 +78,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login" />
+            app:layout_constraintTop_toBottomOf="@+id/pin" />
 
         <Button
             android:id="@+id/singup"

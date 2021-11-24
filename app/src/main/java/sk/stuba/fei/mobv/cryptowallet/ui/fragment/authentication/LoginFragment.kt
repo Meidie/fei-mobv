@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun getAccount() {
-        if (areInputsValid(binding.login.text.toString())) {
+        if (areInputsValid(binding.pin.text.toString())) {
             findNavController().navigate(R.id.action_global_homeFragment)
         } else {
             Toast.makeText(requireContext(), "Incorrect private key, try again", Toast.LENGTH_LONG)
@@ -64,8 +64,8 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun areInputsValid(privateKey: String): Boolean {
-        return !(TextUtils.isEmpty(privateKey))
+    private fun areInputsValid(pin: String): Boolean {
+        return !(TextUtils.isEmpty(pin))
     }
 
     override fun onDestroy() {
