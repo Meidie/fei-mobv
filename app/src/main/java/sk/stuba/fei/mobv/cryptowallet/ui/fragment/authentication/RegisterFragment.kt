@@ -49,7 +49,6 @@ class RegisterFragment : Fragment() {
             createAccount()
         }
 
-        // TODO asi by to malo byt cez Data Bindingu
         binding.loginbutton.setOnClickListener {
             findNavController().navigate(R.id.action_register_to_login)
         }
@@ -60,7 +59,7 @@ class RegisterFragment : Fragment() {
                 Log.d("Account Created", it?.isSuccessful.toString())
                 findNavController().navigate(R.id.action_global_homeFragment)
             } else {
-                Log.d("Account not created", it?.isSuccessful.toString())
+                Toast.makeText(requireContext(),"Account not created" + it?.isSuccessful.toString(), Toast.LENGTH_SHORT).show()
             }
         })
 
