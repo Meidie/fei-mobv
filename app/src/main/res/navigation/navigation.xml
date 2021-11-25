@@ -75,6 +75,9 @@
         <action
             android:id="@+id/action_transactionListFragment_to_addTransactionFragment"
             app:destination="@id/addTransactionFragment" />
+        <action
+            android:id="@+id/action_transactionListFragment_to_transactionDetailFragment"
+            app:destination="@id/transactionDetailFragment" />
     </fragment>
     <action android:id="@+id/action_global_transactionListFragment" app:destination="@id/transactionListFragment" />
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
@@ -87,5 +90,16 @@
         <action
             android:id="@+id/action_addTransactionFragment_to_transactionListFragment"
             app:destination="@id/transactionListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionDetailFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.TransactionDetailFragment"
+        android:label="TransactionDetailFragment" >
+        <action
+            android:id="@+id/action_transactionDetailFragment_to_transactionListFragment"
+            app:destination="@id/transactionListFragment" />
+        <argument
+            android:name="currentTransaction"
+            app:argType="sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction" />
     </fragment>
 </navigation>

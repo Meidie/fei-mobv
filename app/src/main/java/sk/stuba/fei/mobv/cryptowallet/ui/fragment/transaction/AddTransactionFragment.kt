@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
+import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
@@ -24,6 +25,7 @@ import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAddTransactionBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
+import sk.stuba.fei.mobv.cryptowallet.security.Crypto
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.TransactionViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
@@ -48,8 +50,6 @@ class AddTransactionFragment : Fragment() {
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)
 
-        // TODO co som cital tak co fragment to max jeden view model cize tato logika by asi mala
-        //  byt presunuta do transactionViewModel
         contactViewModel = ViewModelProvider(
             this,
             ContactViewModelFactory(
@@ -60,7 +60,7 @@ class AddTransactionFragment : Fragment() {
 
         transactionViewModel = ViewModelProvider(
             this,
-            TransactionViewModelFactory(TransactionRepository(database.transactionDao()))
+            TransactionViewModelFactory(TransactionRepository(database.transactionDao()), StellarApi(), AccountRepository(database.accountDao(), StellarApi()))
         )[TransactionViewModel::class.java]
 
         val contactsString: MutableList<String> = ArrayList()
@@ -83,7 +83,6 @@ class AddTransactionFragment : Fragment() {
             }
 
         binding.contactSelect.doOnTextChanged { text, _, _, _ ->
-            Log.i("SELECTED", text.toString())
             if (TextUtils.isEmpty(text)) {
                 binding.recipientLayout.error = "Recipient is required"
             } else {
@@ -92,10 +91,13 @@ class AddTransactionFragment : Fragment() {
         }
 
         binding.amount.doOnTextChanged { text, _, _, _ ->
-            Log.i("AMOUNT", text!!.toString())
-            if (text.startsWith("-")) {
+            if (text!!.startsWith("-")) {
                 binding.amount.setText("")
                 binding.amountLayout.error = "Negative amount not allowed!"
+            } else if (text.contains(" ")) {
+                binding.amount.setText(text.replace(" ".toRegex(), ""))
+            } else if (text.contains(",")) {
+                binding.amountLayout.error = ", is not allowed use ."
             } else {
                 binding.amountLayout.error = null
             }
@@ -107,35 +109,51 @@ class AddTransactionFragment : Fragment() {
             insertTransactionToDatabase()
         }
 
+        transactionViewModel.newTransactionResponse.observe(viewLifecycleOwner, {
+            if(it != null){
+                Toast.makeText(requireContext(), "Transaction successfully added", Toast.LENGTH_SHORT).show()
+
+                val action = AddTransactionFragmentDirections.actionAddTransactionFragmentToTransactionListFragment()
+                findNavController().navigate(action)
+            } else {
+                Toast.makeText(requireContext(), "ERROR!", Toast.LENGTH_SHORT).show()
+            }
+        })
+
         return binding.root
     }
 
     private fun insertTransactionToDatabase() {
         val recipient = binding.contactSelect.text
         val amount = binding.amount.text
+        val pin = binding.pin.text
 
-        if (isInputValid(recipient, amount)) {
-            val contact =
-                contactsList.first { it.name == binding.contactSelect.text.toString() }
-            // TODO namapovat na accountId
-            val newTransaction =
-                Transaction(0L, 0L, amount.toString(), TransactionType.CREDIT, contact.publicKey)
-            transactionViewModel.insert(newTransaction)
-            // TODO volanie stellar api
-            Toast.makeText(requireContext(), "Transaction successfully added", Toast.LENGTH_SHORT)
-                .show()
+        if (isInputValid(recipient, amount, pin)) {
+            if(pinIsValid(pin)){
 
-            val action =
-                AddTransactionFragmentDirections.actionAddTransactionFragmentToTransactionListFragment()
-            findNavController().navigate(action)
+                val contact = contactsList.first { it.name == binding.contactSelect.text.toString() }
+//            // TODO namapovat na accountId
+                val newTransaction = Transaction(0L, 0L, amount.toString(), TransactionType.CREDIT, contact.publicKey)
+                transactionViewModel.sendTransaction(newTransaction, pin.toString())
 
+            } else {
+                Toast.makeText(requireContext(), "INVALID PIN", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            Toast.makeText(requireContext(), "Please fill reqiured fields", Toast.LENGTH_LONG)
+            Toast.makeText(requireContext(), "Please fill required fields", Toast.LENGTH_LONG)
                 .show()
         }
     }
 
-    private fun isInputValid(recipient: Editable, amount: Editable?): Boolean {
+    private fun pinIsValid(pin: Editable?): Boolean {
+        val account = transactionViewModel.account
+
+        return Crypto().secretKeyGenerator.generateSecretKey(pin.toString(), account.pin.salt).encoded.contentEquals(
+            (account.pin.pin)
+        )
+    }
+
+    private fun isInputValid(recipient: Editable, amount: Editable?, pin: Editable?): Boolean {
 
         binding.recipientLayout.error = null
         binding.amountLayout.error = null
@@ -150,6 +168,14 @@ class AddTransactionFragment : Fragment() {
         if (TextUtils.isEmpty(amount)) {
             valid = false
             binding.amountLayout.error = "Amount is required"
+        } else if (amount!!.contains(",")) {
+            valid = false
+            binding.amountLayout.error = ", is not allowed use ."
+        }
+
+        if(TextUtils.isEmpty(pin)){
+            valid = false
+            binding.pinLayout.error = "Pin is required"
         }
 
         // TODO doplnit max

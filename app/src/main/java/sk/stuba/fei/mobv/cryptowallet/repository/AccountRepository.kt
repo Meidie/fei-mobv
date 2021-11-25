@@ -34,8 +34,6 @@ class AccountRepository(private val accountDao: AccountDao, private val api: Ste
         return api.getAccount(accountId)
     }
 
-
-
     suspend fun createAccount(accountId: String): Response<Void> {
         return RemoteDataSource.friendBotApi.createAccount(accountId)
     }

@@ -2,11 +2,15 @@ package sk.stuba.fei.mobv.cryptowallet.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
+import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionType
 import sk.stuba.fei.mobv.cryptowallet.databinding.TransactionRowBinding
+import sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.TransactionListFragmentDirections
 
 class TransactionListAdapter: ListAdapter<Transaction, TransactionListAdapter.TransactionRowViewHolder>(TransactionDiffCallback()) {
 
@@ -20,9 +24,16 @@ class TransactionListAdapter: ListAdapter<Transaction, TransactionListAdapter.Tr
         }
 
         fun bind(currentItem: Transaction) {
-            binding.count.text = currentItem.transactionId.toString()
+            binding.image.setBackgroundResource(if (currentItem.type.name.equals(TransactionType.CREDIT.name))
+                R.drawable.ic_baseline_trending_up_green_24 else R.drawable.ic_baseline_trending_down_red_24)
             binding.recipient.text = currentItem.publicKey
-            binding.amount.text = currentItem.amount.toString()
+            binding.amount.text = currentItem.amount
+
+            binding.row.setOnClickListener{
+                binding.root.findNavController().navigate(
+                    TransactionListFragmentDirections.actionTransactionListFragmentToTransactionDetailFragment(currentItem)
+                )
+            }
         }
 
     }

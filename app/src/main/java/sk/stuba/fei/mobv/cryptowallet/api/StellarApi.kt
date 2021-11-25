@@ -1,9 +1,9 @@
 package sk.stuba.fei.mobv.cryptowallet.api
 
 import android.util.Log
-import org.stellar.sdk.Server
+import org.stellar.sdk.*
 import org.stellar.sdk.responses.AccountResponse
-
+import org.stellar.sdk.responses.SubmitTransactionResponse
 
 class StellarApi {
 
@@ -30,7 +30,18 @@ class StellarApi {
 
     }
 
-    fun sendTransaction() {
+    fun sendTransaction(transaction: Transaction): SubmitTransactionResponse? {
 
+        return runCatching {
+            val server = Server(RemoteDataSource.TESTNET_STELLAR_BASE_URL)
+            server.submitTransaction(transaction)
+        }.onSuccess {
+            Log.d("STELLAR API", "Add transaction was successful")
+        }.onFailure {
+            Log.e(
+                "STELLAR API",
+                "Error trying to add transaction, error: ${it.localizedMessage}"
+            )
+        }.getOrNull()
     }
 }

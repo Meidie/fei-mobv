@@ -41,4 +41,6 @@
     <string name="add_transaction">Add transaction</string>
     <string name="add_new_transaction">Add new transaction</string>
     <string name="select_from_contacts">Select from contacts</string>
+    <string name="enter_pin">Enter PIN</string>
+    <string name="date">Transaction date</string>
 </resources>

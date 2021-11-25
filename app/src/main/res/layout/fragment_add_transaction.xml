@@ -27,7 +27,6 @@
                 android:id="@+id/contactSelect"
                 android:layout_width="match_parent"
                 android:inputType="none"
-
                 android:layout_height="match_parent"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -80,6 +79,32 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/pinLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="16dp"
+            android:hint="@string/enter_pin"
+            app:helperText="*Required"
+            android:minHeight="48dp"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:errorIconDrawable="@drawable/ic_error"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountLayout"
+            app:startIconDrawable="@drawable/ic_baseline_lock_24">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             android:id="@+id/sendButton"
             android:layout_width="match_parent"
@@ -91,7 +116,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amountLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/pinLayout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

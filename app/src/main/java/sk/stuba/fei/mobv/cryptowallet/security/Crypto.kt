@@ -33,15 +33,17 @@ class Crypto {
         return CipherData(key.salt, ivSpec.iv, cipherText)
     }
 
-    fun decrypt(cipherData: CipherData, pin: String): String {
+    fun decrypt(cipherData: CipherData, pin: String): ByteArray? {
 
         val secretKey = secretKeyGenerator.generateSecretKey(pin, cipherData.salt)
         val ivSpec = IvParameterSpec(cipherData.iv)
         val cipher = getCipher(Cipher.DECRYPT_MODE, secretKey, ivSpec)!!
 
-        return String(
-            Base64.decode(cipher.doFinal(cipherData.cipherText), Base64.DEFAULT), Charsets.UTF_8
-        )
+//        return String(
+//            Base64.decode(cipher.doFinal(cipherData.cipherText), Base64.DEFAULT), Charsets.UTF_8
+//        )
+        return Base64.decode(cipher.doFinal(cipherData.cipherText), Base64.DEFAULT)
+
     }
 
     private fun getCipher(mode: Int, secretKey: SecretKey, iv: IvParameterSpec): Cipher? {

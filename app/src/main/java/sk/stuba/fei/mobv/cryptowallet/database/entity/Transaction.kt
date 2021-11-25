@@ -1,9 +1,12 @@
 package sk.stuba.fei.mobv.cryptowallet.database.entity
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "transaction_table")
 data class Transaction(
 
@@ -21,4 +24,4 @@ data class Transaction(
 
     @ColumnInfo(name = "public_key")
     var publicKey: String
-)
+): Parcelable

@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import sk.stuba.fei.mobv.cryptowallet.R
+import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionListBinding
+import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.TransactionListAdapter
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.TransactionViewModelFactory
@@ -34,11 +37,14 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
         val database = AppDatabase.getDatabase(application)
         transactionViewModel = ViewModelProvider(
             this,
-            TransactionViewModelFactory(TransactionRepository(database.transactionDao()))
+            TransactionViewModelFactory(TransactionRepository(database.transactionDao()), StellarApi(), AccountRepository(database.accountDao(), StellarApi()))
         )[TransactionViewModel::class.java]
 
         val adapter = TransactionListAdapter()
         binding.transactionListRecycleView.adapter = adapter
+        binding.transactionListRecycleView.addItemDecoration(
+            DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        )
         transactionViewModel.allContacts.observe(viewLifecycleOwner, {
             it?.let {
 
@@ -55,8 +61,7 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
         })
 
         binding.addTransactionButton.setOnClickListener {
-            val action =
-                TransactionListFragmentDirections.actionTransactionListFragmentToAddTransactionFragment()
+            val action = TransactionListFragmentDirections.actionTransactionListFragmentToAddTransactionFragment()
             findNavController().navigate(action)
         }
 
