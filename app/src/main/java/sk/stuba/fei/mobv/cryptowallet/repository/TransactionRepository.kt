@@ -3,6 +3,7 @@ package sk.stuba.fei.mobv.cryptowallet.repository
 import androidx.lifecycle.LiveData
 import sk.stuba.fei.mobv.cryptowallet.database.dao.TransactionDao
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
+import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 
 class TransactionRepository(private val dao: TransactionDao) : IRepository<Transaction> {
 
@@ -23,6 +24,14 @@ class TransactionRepository(private val dao: TransactionDao) : IRepository<Trans
     }
 
     fun getAllTransactions(): LiveData<List<Transaction>> {
-        return dao.getAllTransactions()
+        return dao.getAllTransactionsActiveAccount()
+    }
+
+    fun getAllTransactionAndContact(): LiveData<List<TransactionAndContact>> {
+        return dao.getAllTransactionsAndContactsActiveAccount()
+    }
+
+    fun getAllTransactionWithoutContact(): LiveData<List<Transaction>> {
+        return dao.getAllTransactionsWithoutContactsActiveAccount()
     }
 }

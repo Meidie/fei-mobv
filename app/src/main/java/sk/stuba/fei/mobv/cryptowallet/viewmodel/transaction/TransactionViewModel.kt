@@ -14,16 +14,23 @@ import org.stellar.sdk.responses.SubmitTransactionResponse
 import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
+import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class TransactionViewModel(
     private val transactionRepository: TransactionRepository, private val api: StellarApi,
     private val accountRepository: AccountRepository) : ViewModel() {
 
     val allContacts: LiveData<List<Transaction>> = transactionRepository.getAllTransactions()
+    val allTransactionAndContact: LiveData<List<TransactionAndContact>> = transactionRepository.getAllTransactionAndContact()
+    val allTransactionWithoutContact: LiveData<List<Transaction>> = transactionRepository.getAllTransactionWithoutContact()
+
     lateinit var account: Account
+    private var stellarAcount: AccountResponse? = null
 
     private val _newTransactionResponse: MutableLiveData<SubmitTransactionResponse?> = MutableLiveData()
     val newTransactionResponse: LiveData<SubmitTransactionResponse?> get() = _newTransactionResponse
@@ -38,19 +45,21 @@ class TransactionViewModel(
 
     fun getAccount() = viewModelScope.launch(Dispatchers.IO){
         account = accountRepository.getActiveAccount()
+        stellarAcount = accountRepository.getAccountInfo(account.publicKey)
     }
 
     fun sendTransaction(transaction: Transaction, pin: String) = viewModelScope.launch(Dispatchers.IO) {
 
-        val sourceAccount: AccountResponse? = accountRepository.getAccountInfo(accountRepository.getActiveAccount().publicKey)
+        val activeAccount = accountRepository.getActiveAccount()
+
+        transaction.accountOwnerId = activeAccount.accountId
 
         val newTransaction: org.stellar.sdk.Transaction = org.stellar.sdk.Transaction.Builder(
-            sourceAccount,
+            stellarAcount,
             Network.TESTNET
         )
             .addOperation(
                 PaymentOperation.Builder(
-//                    transaction.publicKey,
                     transaction.publicKey,
                     AssetTypeNative(),
                     transaction.amount
@@ -65,8 +74,9 @@ class TransactionViewModel(
         val response = api.sendTransaction(newTransaction)
 
         if(response != null){
+            transaction.dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy"))
             insert(transaction)
         }
-        _newTransactionResponse.postValue(response)
+        _newTransactionResponse.postValue(null)
     }
 }

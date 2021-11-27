@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import sk.stuba.fei.mobv.cryptowallet.R
-import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
+import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionType
 import sk.stuba.fei.mobv.cryptowallet.databinding.TransactionRowBinding
 import sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.TransactionListFragmentDirections
 
-class TransactionListAdapter: ListAdapter<Transaction, TransactionListAdapter.TransactionRowViewHolder>(TransactionDiffCallback()) {
+class TransactionListAdapter: ListAdapter<TransactionAndContact, TransactionListAdapter.TransactionRowViewHolder>(TransactionDiffCallback()) {
 
     class TransactionRowViewHolder(private val binding: TransactionRowBinding): RecyclerView.ViewHolder(binding.root) {
         companion object {
@@ -23,11 +23,11 @@ class TransactionListAdapter: ListAdapter<Transaction, TransactionListAdapter.Tr
             }
         }
 
-        fun bind(currentItem: Transaction) {
-            binding.image.setBackgroundResource(if (currentItem.type.name.equals(TransactionType.CREDIT.name))
+        fun bind(currentItem: TransactionAndContact) {
+            binding.image.setBackgroundResource(if (currentItem.transaction.type.name.equals(TransactionType.CREDIT.name))
                 R.drawable.ic_baseline_trending_up_green_24 else R.drawable.ic_baseline_trending_down_red_24)
-            binding.recipient.text = currentItem.publicKey
-            binding.amount.text = currentItem.amount
+            binding.recipient.text = if (currentItem.contact.name != "") currentItem.contact.name else currentItem.contact.publicKey
+            binding.amount.text = currentItem.transaction.amount
 
             binding.row.setOnClickListener{
                 binding.root.findNavController().navigate(
@@ -48,12 +48,12 @@ class TransactionListAdapter: ListAdapter<Transaction, TransactionListAdapter.Tr
     }
 }
 
-class TransactionDiffCallback: DiffUtil.ItemCallback<Transaction>(){
-    override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-        return oldItem.transactionId == newItem.transactionId
+class TransactionDiffCallback: DiffUtil.ItemCallback<TransactionAndContact>(){
+    override fun areItemsTheSame(oldItem: TransactionAndContact, newItem: TransactionAndContact): Boolean {
+        return oldItem.transaction.transactionId == newItem.transaction.transactionId
     }
 
-    override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
+    override fun areContentsTheSame(oldItem: TransactionAndContact, newItem: TransactionAndContact): Boolean {
         return oldItem == newItem
     }
 

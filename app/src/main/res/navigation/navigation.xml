@@ -100,6 +100,6 @@
             app:destination="@id/transactionListFragment" />
         <argument
             android:name="currentTransaction"
-            app:argType="sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction" />
+            app:argType="sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact" />
     </fragment>
 </navigation>

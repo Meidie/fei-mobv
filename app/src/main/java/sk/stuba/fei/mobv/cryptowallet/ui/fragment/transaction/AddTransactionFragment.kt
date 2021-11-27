@@ -39,12 +39,9 @@ class AddTransactionFragment : Fragment() {
     private var _binding: FragmentAddTransactionBinding? = null
     private val binding get() = _binding!!
     private var contactsList: List<Contact> = emptyList()
+    private var selectedContact: Contact? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddTransactionBinding.inflate(inflater, container, false)
 
         val application = requireNotNull(this.activity).application
@@ -70,6 +67,7 @@ class AddTransactionFragment : Fragment() {
 
         contactViewModel.allContacts.observe(viewLifecycleOwner, { contacts ->
             contactsList = contacts
+            contactsString.add("")
             for ((_, _, name) in contacts) {
                 contactsString.add(name)
             }
@@ -78,32 +76,21 @@ class AddTransactionFragment : Fragment() {
 
         binding.contactSelect.onItemClickListener =
             AdapterView.OnItemClickListener { adapterView, view, i, l ->
-                binding.publicKey.setText(contactsList.filter { it.name.equals(binding.contactSelect.text.toString()) }
-                    .first().publicKey)
+                if(TextUtils.isEmpty(binding.contactSelect.text)){
+                    binding.publicKey.isEnabled = true
+                    selectedContact = null
+                    binding.publicKey.setText("")
+                } else {
+                    binding.publicKey.isEnabled = false
+                    selectedContact = contactsList.filter { it.name.equals(binding.contactSelect.text.toString()) }.first()
+                    binding.publicKey.setText(selectedContact?.publicKey)
+                }
+
             }
 
-        binding.contactSelect.doOnTextChanged { text, _, _, _ ->
-            if (TextUtils.isEmpty(text)) {
-                binding.recipientLayout.error = "Recipient is required"
-            } else {
-                binding.recipientLayout.error = null
-            }
-        }
-
-        binding.amount.doOnTextChanged { text, _, _, _ ->
-            if (text!!.startsWith("-")) {
-                binding.amount.setText("")
-                binding.amountLayout.error = "Negative amount not allowed!"
-            } else if (text.contains(" ")) {
-                binding.amount.setText(text.replace(" ".toRegex(), ""))
-            } else if (text.contains(",")) {
-                binding.amountLayout.error = ", is not allowed use ."
-            } else {
-                binding.amountLayout.error = null
-            }
-
-            // TODO doplniť možnosť zadať maximálne current balance
-        }
+        publicKeyTextChanged()
+        amountTextChanged()
+        pinTextChanged()
 
         binding.sendButton.setOnClickListener {
             insertTransactionToDatabase()
@@ -124,16 +111,14 @@ class AddTransactionFragment : Fragment() {
     }
 
     private fun insertTransactionToDatabase() {
-        val recipient = binding.contactSelect.text
+        val publicKey = binding.publicKey.text
         val amount = binding.amount.text
         val pin = binding.pin.text
 
-        if (isInputValid(recipient, amount, pin)) {
+        if (isInputValid(publicKey, amount, pin)) {
             if(pinIsValid(pin)){
 
-                val contact = contactsList.first { it.name == binding.contactSelect.text.toString() }
-//            // TODO namapovat na accountId
-                val newTransaction = Transaction(0L, 0L, amount.toString(), TransactionType.CREDIT, contact.publicKey)
+                val newTransaction = Transaction(0L, 0L, amount.toString(), TransactionType.DEBET, if (selectedContact != null) selectedContact!!.publicKey else publicKey.toString(), "")
                 transactionViewModel.sendTransaction(newTransaction, pin.toString())
 
             } else {
@@ -145,6 +130,50 @@ class AddTransactionFragment : Fragment() {
         }
     }
 
+
+    private fun pinTextChanged() {
+        binding.pin.doOnTextChanged { text, _, _, _ ->
+            if (TextUtils.isEmpty(text)) {
+                binding.pinLayout.error = "Amount is required"
+            } else {
+                binding.pinLayout.error = null
+            }
+        }
+    }
+
+    private fun amountTextChanged() {
+        binding.amount.doOnTextChanged { text, _, _, _ ->
+            if(TextUtils.isEmpty(text)){
+                binding.amountLayout.error = "Amount is required"
+            } else if (text!!.startsWith("-")) {
+                binding.amount.setText("")
+                binding.amountLayout.error = "Negative amount not allowed!"
+            } else if (text.contains(" ")) {
+                binding.amount.setText(text.replace(" ".toRegex(), ""))
+            } else if (text.contains(",")) {
+                binding.amountLayout.error = ", is not allowed use ."
+            } else {
+                binding.amountLayout.error = null
+            }
+
+            // TODO doplniť možnosť zadať maximálne current balance
+        }
+    }
+
+    private fun publicKeyTextChanged() {
+        binding.publicKey.doOnTextChanged { text, _, _, _ ->
+            if (TextUtils.isEmpty(text)) {
+                binding.publicKeyLayout.error = "Public key is required"
+            } else if(!text!!.startsWith("G")){
+                binding.publicKeyLayout.error = "Key must start with 'G' character"
+            } else if (text.length > 56) {
+                binding.publicKeyLayout.error = "Key must contain 56 alphanumeric characters"
+            } else {
+                binding.publicKeyLayout.error = null
+            }
+        }
+    }
+
     private fun pinIsValid(pin: Editable?): Boolean {
         val account = transactionViewModel.account
 
@@ -153,32 +182,26 @@ class AddTransactionFragment : Fragment() {
         )
     }
 
-    private fun isInputValid(recipient: Editable, amount: Editable?, pin: Editable?): Boolean {
+    private fun isInputValid(publicKey: Editable?, amount: Editable?, pin: Editable?): Boolean {
 
-        binding.recipientLayout.error = null
+        binding.publicKeyLayout.error = null
         binding.amountLayout.error = null
+        binding.pinLayout.error = null
 
         var valid = true
 
-        if (TextUtils.isEmpty(recipient)) {
+        if (TextUtils.isEmpty(publicKey)) {
             valid = false
-            binding.recipientLayout.error = "Recipient is required"
+            binding.publicKeyLayout.error = "Public key is required"
         }
-
         if (TextUtils.isEmpty(amount)) {
             valid = false
             binding.amountLayout.error = "Amount is required"
-        } else if (amount!!.contains(",")) {
-            valid = false
-            binding.amountLayout.error = ", is not allowed use ."
         }
-
         if(TextUtils.isEmpty(pin)){
             valid = false
             binding.pinLayout.error = "Pin is required"
         }
-
-        // TODO doplnit max
 
         return valid
     }

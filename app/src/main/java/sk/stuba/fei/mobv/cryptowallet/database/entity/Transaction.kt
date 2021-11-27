@@ -23,5 +23,9 @@ data class Transaction(
     var type: TransactionType,
 
     @ColumnInfo(name = "public_key")
-    var publicKey: String
+    var publicKey: String,
+
+    @ColumnInfo(name = "dateTime_created")
+    var dateTime: String
+
 ): Parcelable

@@ -16,7 +16,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            app:helperText="*Required"
             app:errorEnabled="true"
             app:startIconDrawable="@drawable/ic_person"
             android:hint="@string/select_from_contacts"
@@ -39,15 +38,18 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:hint="@string/key"
+            app:helperText="*Required"
             android:minHeight="48dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="56"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recipientLayout"
             app:startIconDrawable="@drawable/ic_key">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/publicKey"
-                android:enabled="false"
                 android:layout_width="match_parent"
+                android:enabled="true"
                 android:layout_height="wrap_content"
                 android:inputType="none" />
 

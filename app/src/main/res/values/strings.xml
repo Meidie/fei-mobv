@@ -43,4 +43,5 @@
     <string name="select_from_contacts">Select from contacts</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="date">Transaction date</string>
+    <string name="contact">Contact</string>
 </resources>

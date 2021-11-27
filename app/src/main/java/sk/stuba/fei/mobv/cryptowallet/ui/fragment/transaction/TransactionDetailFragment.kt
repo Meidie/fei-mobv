@@ -7,17 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import sk.stuba.fei.mobv.cryptowallet.R
-import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
+import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionType
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionDetailBinding
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class TransactionDetailFragment : Fragment() {
 
     private val args: TransactionDetailFragmentArgs by navArgs()
-    private lateinit var transaction: Transaction
+    private lateinit var transaction: TransactionAndContact
 
     private var _binding: FragmentTransactionDetailBinding? = null
     private val binding get() = _binding!!
@@ -26,10 +23,11 @@ class TransactionDetailFragment : Fragment() {
         _binding = FragmentTransactionDetailBinding.inflate(inflater, container, false)
 
         transaction = args.currentTransaction
-        binding.publicKey.setText(transaction.publicKey)
-        binding.amount.setText(transaction.amount)
-        binding.date.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy")))
-        binding.image.setBackgroundResource(if (transaction.type.name.equals(TransactionType.CREDIT.name))
+        binding.publicKey.setText(transaction.transaction.publicKey)
+        binding.amount.setText(transaction.transaction.amount)
+        binding.date.setText(transaction.transaction.dateTime)
+        binding.contact.setText(if (transaction.contact.name != "") transaction.contact.name else "No contact.")
+        binding.image.setBackgroundResource(if (transaction.transaction.type.name.equals(TransactionType.CREDIT.name))
             R.drawable.ic_baseline_trending_up_green_24 else R.drawable.ic_baseline_trending_down_red_24)
 
         return binding.root

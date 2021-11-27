@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
+import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
+import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
@@ -45,10 +47,12 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
         binding.transactionListRecycleView.addItemDecoration(
             DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         )
-        transactionViewModel.allContacts.observe(viewLifecycleOwner, {
-            it?.let {
 
-                if (it.isEmpty()) {
+        transactionViewModel.allTransactionAndContact.observe(viewLifecycleOwner, { transactionAndContact ->
+            transactionViewModel.allTransactionWithoutContact.observe(viewLifecycleOwner, { transactionWithoutContact ->
+
+
+                if (transactionAndContact.isEmpty() && transactionWithoutContact.isEmpty()) {
                     binding.transactionListRecycleView.visibility = View.GONE
                     binding.emptyView.visibility = View.VISIBLE
                 } else {
@@ -56,8 +60,16 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
                     binding.emptyView.visibility = View.GONE
                 }
 
-                adapter.submitList(it.sortedBy { t -> t.transactionId })
-            }
+                val test: MutableList<TransactionAndContact> = mutableListOf()
+                test.addAll(transactionAndContact)
+
+                for (transaction in transactionWithoutContact) {
+                    test.add(TransactionAndContact(transaction, Contact(0L, transaction.accountOwnerId, "", transaction.publicKey)))
+                }
+
+                adapter.submitList(test.sortedBy { t -> t.transaction.transactionId })
+
+            })
         })
 
         binding.addTransactionButton.setOnClickListener {
