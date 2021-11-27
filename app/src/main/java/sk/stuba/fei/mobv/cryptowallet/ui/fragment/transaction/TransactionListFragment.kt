@@ -17,7 +17,7 @@ import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.TransactionListAdapter
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.TransactionViewModelFactory
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModel
 
 class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {

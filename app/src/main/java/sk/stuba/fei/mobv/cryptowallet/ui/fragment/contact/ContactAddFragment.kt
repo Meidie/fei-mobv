@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -31,6 +30,7 @@ class ContactAddFragment : Fragment() {
     ): View {
         _binding = FragmentContactAddBinding.inflate(inflater, container, false)
 
+
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)
         contactViewModel = ViewModelProvider(
@@ -41,19 +41,19 @@ class ContactAddFragment : Fragment() {
             )
         )[ContactViewModel::class.java]
 
-        binding.addButton.setOnClickListener {
-            insertContactToDatabase()
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = contactViewModel
 
-        binding.addKeyText.doOnTextChanged { text, _, _, _ ->
-            if (!text!!.startsWith("G")) {
-                binding.addKeyLayout.error = "Key must start with \'G\' character"
-            } else if (text.length > 56) {
-                binding.addKeyLayout.error = "Key must contain 56 alphanumeric characters"
-            } else {
-                binding.addKeyLayout.error = null
+        contactViewModel.contactSaveAction.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it.first) {
+                    Toast.makeText(requireContext(), it.second, Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_contactAddFragment_to_contactListFragment)
+                } else {
+                    Toast.makeText(requireContext(), it.second, Toast.LENGTH_LONG).show()
+                }
             }
-        }
+        })
 
         return binding.root
     }
@@ -61,40 +61,5 @@ class ContactAddFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    private fun insertContactToDatabase() {
-        val firstName = binding.addNameText.text.toString()
-        val key = binding.addKeyText.text.toString()
-
-        if (areInputsValid(firstName, key)) {
-            contactViewModel.insert(firstName, key)
-            Toast.makeText(requireContext(), "Contact successfully added", Toast.LENGTH_SHORT)
-                .show()
-
-            findNavController().navigate(R.id.action_contactAddFragment_to_contactListFragment)
-        } else {
-            Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_LONG)
-                .show()
-        }
-    }
-
-    // helper methods
-
-    private fun areInputsValid(name: String, key: String): Boolean {
-
-        var valid = true
-
-        if (TextUtils.isEmpty(name)) {
-            valid = false
-            binding.addNameLayout.error = "Value is required!"
-        }
-
-        if (TextUtils.isEmpty(key)) {
-            valid = false
-            binding.addKeyLayout.error = "Value is required!"
-        }
-
-        return valid
     }
 }

@@ -20,6 +20,7 @@ interface TransactionDao : IDao<Transaction> {
     @Query("SELECT * FROM transaction_table WHERE account_owner_id = ( select accountId from account_table where active_account)")
     fun getAllTransactionsActiveAccount(): LiveData<List<Transaction>>
 
+    @androidx.room.Transaction
     @Query("SELECT * FROM transaction_table t WHERE t.account_owner_id = ( select accountId from account_table where active_account) AND EXISTS (SELECT * FROM contact_table c where c.public_key = t.public_key)")
     fun getAllTransactionsAndContactsActiveAccount(): LiveData<List<TransactionAndContact>>
 

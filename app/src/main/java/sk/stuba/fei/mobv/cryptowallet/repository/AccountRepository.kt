@@ -7,27 +7,27 @@ import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.dao.AccountDao
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
 
-class AccountRepository(private val accountDao: AccountDao, private val api: StellarApi) :
+class AccountRepository(private val dao: AccountDao, private val api: StellarApi) :
     IRepository<Account> {
 
     override suspend fun find(id: Long): Account? {
-        return accountDao.find(id)
+        return dao.find(id)
     }
 
     override suspend fun insert(entity: Account): Long {
-        return accountDao.insert(entity)
+        return dao.insert(entity)
     }
 
     override suspend fun update(entity: Account) {
-        accountDao.delete(entity)
+        dao.delete(entity)
     }
 
     override suspend fun delete(entity: Account) {
-        accountDao.delete(entity)
+        dao.delete(entity)
     }
 
     suspend fun getActiveAccount(): Account {
-        return accountDao.findActive()
+        return dao.findActive()
     }
 
     fun getAccountInfo(accountId: String): AccountResponse? {
@@ -36,5 +36,11 @@ class AccountRepository(private val accountDao: AccountDao, private val api: Ste
 
     suspend fun createAccount(accountId: String): Response<Void> {
         return RemoteDataSource.friendBotApi.createAccount(accountId)
+    }
+
+    suspend fun signOut(){
+        val activeAccount = dao.findActive()
+        activeAccount.active = false
+        dao.update(activeAccount)
     }
 }

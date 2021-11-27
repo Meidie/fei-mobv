@@ -3,7 +3,6 @@ package sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.TransactionViewModelFactory
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModel
@@ -177,8 +176,8 @@ class AddTransactionFragment : Fragment() {
     private fun pinIsValid(pin: Editable?): Boolean {
         val account = transactionViewModel.account
 
-        return Crypto().secretKeyGenerator.generateSecretKey(pin.toString(), account.pin.salt).encoded.contentEquals(
-            (account.pin.pin)
+        return Crypto().secretKeyGenerator.generateSecretKey(pin.toString(), account.pinData.salt).encoded.contentEquals(
+            (account.pinData.pin)
         )
     }
 

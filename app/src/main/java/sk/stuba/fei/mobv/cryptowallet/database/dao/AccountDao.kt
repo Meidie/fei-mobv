@@ -19,9 +19,6 @@ interface AccountDao : IDao<Account> {
     @Query("SELECT * from account_table WHERE active_account")
     suspend fun findActive(): Account
 
-    @Query("SELECT * from account_table WHERE active_account")
-    suspend fun findActiveAsync(): Account
-
     @androidx.room.Transaction
     @Query("SELECT * FROM account_table WHERE accountId = :id")
     fun getAccountsWithTransactionsContacts(id: Long): LiveData<List<AccountWithTransactions>>

@@ -10,7 +10,7 @@ import org.stellar.sdk.KeyPair
 import retrofit2.Response
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Balance
-import sk.stuba.fei.mobv.cryptowallet.database.entity.Pin
+import sk.stuba.fei.mobv.cryptowallet.database.entity.PinData
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
@@ -58,7 +58,7 @@ class AccountViewModel(
                 val accId = accountRepository.insert(
                     Account(
                         0L, pair.accountId, cipherData,
-                        Pin(hashedPin.salt, hashedPin.secretKey.encoded),
+                        PinData(hashedPin.salt, hashedPin.secretKey.encoded),
                         true
                     )
                 )

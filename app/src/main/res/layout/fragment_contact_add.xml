@@ -4,6 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.fragment.contact.ContactAddFragment">
 
+    <data>
+        <import type="sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel.FormError" />
+
+        <variable
+            name="viewModel"
+            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,13 +30,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:startIconDrawable="@drawable/ic_person">
+            app:startIconDrawable="@drawable/ic_person"
+            app:errorText="@{viewModel.nameError.message}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addNameText"
+                android:text="@={viewModel.contact.name}"
+                android:afterTextChanged="@{(text) -> viewModel.onNameChanged(text)}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColorHint="#757575" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -40,6 +52,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             android:hint="@string/key"
+            app:hintTextColor="#757575"
             app:counterEnabled="true"
             app:counterMaxLength="56"
             app:endIconMode="clear_text"
@@ -50,10 +63,13 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addNameLayout"
+            app:errorText='@{viewModel.keyError.message}'
             app:startIconDrawable="@drawable/ic_key">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addKeyText"
+                android:text="@={viewModel.contact.publicKey}"
+                android:afterTextChanged="@{(text) -> viewModel.onKeyChanged(text)}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName" />
@@ -67,6 +83,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
             android:text="@string/add_contact_button"
+            android:onClick="@{() -> viewModel.insertContactToDatabase()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"

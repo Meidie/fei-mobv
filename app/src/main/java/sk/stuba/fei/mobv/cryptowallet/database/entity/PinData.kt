@@ -2,7 +2,7 @@ package sk.stuba.fei.mobv.cryptowallet.database.entity
 
 import androidx.room.ColumnInfo
 
-data class Pin(
+data class PinData(
 
     @ColumnInfo(name = "salt", typeAffinity = ColumnInfo.BLOB)
     val salt: ByteArray,
@@ -15,7 +15,7 @@ data class Pin(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Pin
+        other as PinData
 
         if (!salt.contentEquals(other.salt)) return false
         if (!pin.contentEquals(other.pin)) return false

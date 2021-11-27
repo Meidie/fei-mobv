@@ -14,12 +14,11 @@ data class Account(
     @ColumnInfo(name = "public_key")
     val publicKey: String,
 
-
     @Embedded(prefix = "pk_")
     val privateKeyData: CipherData?,
 
     @Embedded(prefix = "pin_")
-    val pin: Pin,
+    val pinData: PinData,
 
     @ColumnInfo(name = "active_account")
     var active: Boolean

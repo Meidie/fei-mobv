@@ -21,4 +21,6 @@ data class Contact (
 
     @ColumnInfo(name = "public_key")
     var publicKey: String
-) : Parcelable
+) : Parcelable {
+    constructor() : this(0L, 0L, "", "")
+}

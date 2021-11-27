@@ -1,11 +1,12 @@
 package sk.stuba.fei.mobv.cryptowallet.ui.fragment.contact
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.*
 import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,10 +21,11 @@ import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
 
+
 class ContactEditFragment : Fragment() {
 
     private val args: ContactEditFragmentArgs by navArgs()
-    private lateinit var contact: Contact
+    private lateinit var contactArgs: Contact
 
     private lateinit var contactViewModel: ContactViewModel
     private var _binding: FragmentContactEditBinding? = null
@@ -35,7 +37,7 @@ class ContactEditFragment : Fragment() {
     ): View {
 
         _binding = FragmentContactEditBinding.inflate(inflater, container, false)
-        contact = args.currentContact
+        contactArgs = args.currentContact
 
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)
@@ -47,21 +49,33 @@ class ContactEditFragment : Fragment() {
             )
         )[ContactViewModel::class.java]
 
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = contactViewModel
+
         setDataFromArgs()
 
-        binding.editButton.setOnClickListener {
-            updateContactInDatabase()
-        }
+        binding.editKeyLayout.setEndIconOnClickListener {
 
-        binding.editKeyText.doOnTextChanged { text, _, _, _ ->
-            if (!text!!.startsWith("G")) {
-                binding.editKeyLayout.error = "Key must start with \'G\' character"
-            } else if (text.length > 56) {
-                binding.editKeyLayout.error = "Key must contain 56 alphanumeric characters"
-            } else {
-                binding.editKeyLayout.error = null
+            val pk =  contactViewModel.contact.value?.publicKey
+            if(!pk.isNullOrEmpty()){
+                val clipboardManager =
+                    requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clipData = ClipData.newPlainText("public key", pk)
+                clipboardManager.setPrimaryClip(clipData)
+                Toast.makeText(requireContext(), "Public key copied to clipboard", Toast.LENGTH_LONG).show()
             }
         }
+
+        contactViewModel.contactSaveAction.observe(viewLifecycleOwner, {
+            it?.let {
+                if (it.first) {
+                    Toast.makeText(requireContext(), it.second, Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(it.third)
+                } else {
+                    Toast.makeText(requireContext(), it.second, Toast.LENGTH_LONG).show()
+                }
+            }
+        })
 
         // Add menu
         setHasOptionsMenu(true)
@@ -86,61 +100,33 @@ class ContactEditFragment : Fragment() {
         _binding = null
     }
 
-    private fun updateContactInDatabase() {
-        val name = binding.editNameText.text.toString()
-        val key = binding.editKeyText.text.toString()
-
-        if (areInputsValid(name, key)) {
-            val updatedContact = Contact(contact.contactId, contact.accountOwnerId, name, key)
-            contactViewModel.update(updatedContact)
-            Toast.makeText(requireContext(), "Contact successfully updated", Toast.LENGTH_SHORT)
-                .show()
-
-            findNavController().navigate(R.id.action_contactEditFragment_to_contactListFragment)
-        } else {
-            Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_LONG)
-                .show()
-        }
-    }
-
     private fun deleteContacts() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setPositiveButton("Yes") { _, _ ->
-            contactViewModel.delete(contact)
+            contactViewModel.delete(contactArgs)
             Toast.makeText(
-                requireContext(), "Successfully removed: ${contact.name}",
+                requireContext(), "Successfully removed: ${contactArgs.name}",
                 Toast.LENGTH_SHORT
             ).show()
 
             findNavController().navigate(R.id.action_contactEditFragment_to_contactListFragment)
         }
         builder.setNegativeButton("No") { _, _ -> }
-        builder.setTitle("Delete ${contact.name}")
-        builder.setMessage("Are you sure you want to delete ${contact.name}?")
+        builder.setTitle("Delete ${contactArgs.name}")
+        builder.setMessage("Are you sure you want to delete ${contactArgs.name}?")
         builder.create().show()
     }
 
     // helper methods
 
     private fun setDataFromArgs() {
-        binding.editNameText.setText(contact.name)
-        binding.editKeyText.setText(contact.publicKey)
-    }
-
-    private fun areInputsValid(name: String, key: String): Boolean {
-
-        var valid = true
-
-        if (TextUtils.isEmpty(name)) {
-            valid = false
-            binding.editNameLayout.error = "Value is required!"
-        }
-
-        if (TextUtils.isEmpty(key)) {
-            valid = false
-            binding.editKeyLayout.error = "Value is required!"
-        }
-
-        return valid
+        contactViewModel.setContact(
+            Contact(
+                contactArgs.contactId,
+                contactArgs.accountOwnerId,
+                contactArgs.name,
+                contactArgs.publicKey
+            )
+        )
     }
 }

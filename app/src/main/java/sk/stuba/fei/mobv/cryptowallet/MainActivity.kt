@@ -3,6 +3,7 @@ package sk.stuba.fei.mobv.cryptowallet
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navController = findNavController(R.id.navHostFragment)
+        navController = findNavController(R.id.navHostFragment)
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homeFragment, R.id.transactionListFragment, R.id.contactListFragment,
             R.id.loginFragment)
@@ -29,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.bottomNavigation.setupWithNavController(navController)
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destination.id == R.id.loginFragment || destination.id == R.id.registerFragment) {
