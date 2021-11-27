@@ -16,6 +16,11 @@ interface AccountDao : IDao<Account> {
     @Query("SELECT * from account_table WHERE accountId = :id")
     suspend fun find(id: Long): Account?
 
+
+    @Query("SELECT * from account_table WHERE public_key = :id")
+    suspend fun findByPublicKey(id: String): Account?
+
+
     @Query("SELECT * from account_table WHERE active_account")
     suspend fun findActive(): Account
 

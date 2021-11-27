@@ -14,6 +14,10 @@ class AccountRepository(private val dao: AccountDao, private val api: StellarApi
         return dao.find(id)
     }
 
+    suspend fun findByPublicKey(id: String): Account? {
+        return dao.findByPublicKey(id)
+    }
+
     override suspend fun insert(entity: Account): Long {
         return dao.insert(entity)
     }
