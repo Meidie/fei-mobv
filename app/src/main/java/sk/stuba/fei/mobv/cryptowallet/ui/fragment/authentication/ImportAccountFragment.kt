@@ -12,18 +12,16 @@ import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
-import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentLoginBinding
+import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentImportAccountBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
 
 
+class ImportAccountFragment: Fragment() {
 
-class LoginFragment : Fragment() {
-
-    private lateinit var binding: FragmentLoginBinding
-
+    private lateinit var binding: FragmentImportAccountBinding
     private lateinit var accountViewModel: AccountViewModel
 
     override fun onCreateView(
@@ -47,22 +45,7 @@ class LoginFragment : Fragment() {
         binding.viewmodel = accountViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        binding.singup.setOnClickListener @Suppress("UNUSED_ANONYMOUS_PARAMETER")
-        { view: View ->
-            view.findNavController().navigate(R.id.action_login_to_register)
-        }
-
-        accountViewModel.account.observe(viewLifecycleOwner, {
-
-            if (it != null) {
-                findNavController().navigate(R.id.action_global_homeFragment)
-            } else {
-                findNavController().navigate(R.id.action_loginFragment_to_importAccount)
-            }
-        })
 
         return binding.root
     }
-
-
 }
