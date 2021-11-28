@@ -16,7 +16,7 @@
         android:id="@+id/loginFragment"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.LoginFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_account_login" >
         <action
             android:id="@+id/action_login_to_register"
             app:destination="@id/registerFragment"
@@ -30,32 +30,31 @@
             app:exitAnim="@anim/to_right" />
     </fragment>
     <fragment
-        android:id="@+id/generatePair"
-        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.LoginFragment"
+        android:id="@+id/accountPrintKeyPair"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.PrintKeyPairFragment"
         android:label="Login"
-        tools:layout="@layout/fragment_print_keypair" >
-        <action
-            android:id="@+id/action_generate_to_home"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right" />
-    </fragment>
+        tools:layout="@layout/fragment_account_print_keypair" />
     <fragment
         android:id="@+id/registerFragment"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.RegisterFragment"
         android:label="Register"
-        tools:layout="@layout/fragment_register" >
+        tools:layout="@layout/fragment_account_register" >
         <action
             android:id="@+id/action_register_to_login"
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left" />
+        <action
+            android:id="@+id/action_registerFragment_to_generatePair"
+            app:destination="@id/accountPrintKeyPair"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/importAccount"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.ImportAccountFragment"
         android:label="Register"
-        tools:layout="@layout/fragment_import_account" >
+        tools:layout="@layout/fragment_account_import" >
     </fragment>
     <fragment
         android:id="@+id/contactListFragment"
