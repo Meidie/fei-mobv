@@ -27,7 +27,6 @@ class ContactListAdapter :
 
         fun bind(item: Contact) {
             binding.contact = item
-            //TODO cez databinding?
             binding.contactRow.setOnClickListener {
                 binding.root.findNavController().navigate(
                     ContactListFragmentDirections.actionContactListFragmentToContactEditFragment(

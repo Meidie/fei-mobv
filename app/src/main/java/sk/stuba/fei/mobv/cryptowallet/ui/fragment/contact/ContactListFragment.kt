@@ -15,6 +15,7 @@ import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.contact.ContactListAdapter
+import sk.stuba.fei.mobv.cryptowallet.util.visible
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
 
@@ -52,11 +53,11 @@ class ContactListFragment : Fragment() {
         contactViewModel.allContacts.observe(viewLifecycleOwner, {
             it?.let {
                 if (it.isEmpty()) {
-                    binding.contactListRecycleView.visibility = View.GONE
-                    binding.emptyView.visibility = View.VISIBLE
+                    binding.contactListRecycleView.visible(false)
+                    binding.emptyView.visible(true)
                 } else {
-                    binding.contactListRecycleView.visibility = View.VISIBLE
-                    binding.emptyView.visibility = View.GONE
+                    binding.contactListRecycleView.visible(true)
+                    binding.emptyView.visible(false)
                 }
 
                 adapter.submitList(it.sortedBy { c -> c.name })

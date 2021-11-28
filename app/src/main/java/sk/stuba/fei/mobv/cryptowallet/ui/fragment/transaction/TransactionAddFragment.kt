@@ -16,6 +16,7 @@ import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionAddBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
+import sk.stuba.fei.mobv.cryptowallet.util.visible
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModelFactory
 
@@ -43,11 +44,12 @@ class TransactionAddFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = transactionViewModel
 
-
+        // contact select clear
         transactionViewModel.clearSelect.observe(viewLifecycleOwner, {
             binding.contactSelect.setText("")
         })
 
+        // contacts for select
         transactionViewModel.contactList.observe(viewLifecycleOwner, {
 
             binding.contactSelect.setAdapter(
@@ -57,8 +59,15 @@ class TransactionAddFragment : Fragment() {
             )
         })
 
+        // progressBar visibility
+        transactionViewModel.progressBarVisible.observe(viewLifecycleOwner, {
+            binding.progressBar.visible(it)
+        })
+
+        // transaction Sent Action
         transactionViewModel.transactionSentAction.observe(viewLifecycleOwner, {
             it?.let {
+
                 if (it.first) {
                     Toast.makeText(requireContext(), it.second, Toast.LENGTH_SHORT).show()
                     findNavController().navigate(it.third)

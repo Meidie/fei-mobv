@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 import org.stellar.sdk.responses.AccountResponse
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.entity.*
@@ -16,6 +17,7 @@ import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
 import sk.stuba.fei.mobv.cryptowallet.util.FormError
+import sk.stuba.fei.mobv.cryptowallet.util.OneTimeEvent
 
 class TransactionViewModel(
     private val transactionRepository: TransactionRepository,
@@ -40,8 +42,16 @@ class TransactionViewModel(
     private var  stellarAccount: AccountResponse? = null
     lateinit var activeAccount: Account
 
-    private val _clearSelect: MutableLiveData<Boolean> = MutableLiveData()
-    val clearSelect: LiveData<Boolean>
+    private val _progressBarVisible: MutableLiveData<Boolean> = MutableLiveData(false)
+    val progressBarVisible: LiveData<Boolean>
+        get() = _progressBarVisible
+
+    private val _transactionsSynced: MutableLiveData<OneTimeEvent> = MutableLiveData()
+    val transactionsSynced: LiveData<OneTimeEvent>
+        get() = _transactionsSynced
+
+    private val _clearSelect: MutableLiveData<OneTimeEvent> = MutableLiveData()
+    val clearSelect: LiveData<OneTimeEvent>
         get() = _clearSelect
 
     private val _transactionSentAction = MutableLiveData<Triple<Boolean, String, Int>>()
@@ -52,7 +62,6 @@ class TransactionViewModel(
         keyError.set(FormError.NO_ERROR)
         amountError.set(FormError.NO_ERROR)
         pinError.set(FormError.NO_ERROR)
-        _clearSelect.postValue(false)
         getAccount()
     }
 
@@ -74,6 +83,9 @@ class TransactionViewModel(
         if(isFormValid(pk, amount, pin)){
             sAccount?.let {
                 viewModelScope.launch(Dispatchers.IO) {
+
+                    _progressBarVisible.postValue(true)
+
                     val newTransaction =
                         Transaction(0L,activeAccount.accountId,  amount!!.replace(",","."),
                             TransactionType.DEBET, pk!!,"")
@@ -91,11 +103,19 @@ class TransactionViewModel(
                             )
                         )
                     }
+
+                    _progressBarVisible.postValue(false)
                 }
             }
         } else {
             _transactionSentAction.postValue(Triple(false, "Please fill all fields correctly", -1))
         }
+    }
+
+    fun syncTransactions() = viewModelScope.launch(Dispatchers.IO) {
+        Thread.sleep(3000)
+        //TODO sync logic
+        _transactionsSynced.postValue(OneTimeEvent())
     }
 
     // event listeners
@@ -120,11 +140,9 @@ class TransactionViewModel(
             validateKey(text.toString())
         }
 
-        val clear = _clearSelect.value
         val contact = selectedContact
-
-        if (clear != null && contact != null && text.toString() != contact.publicKey) {
-            _clearSelect.postValue(!clear)
+        if (contact != null && text.toString() != contact.publicKey) {
+            _clearSelect.postValue(OneTimeEvent())
         }
     }
 

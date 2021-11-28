@@ -45,4 +45,5 @@
     <string name="enter_pin">Enter PIN</string>
     <string name="date">Transaction date</string>
     <string name="contact">Contact</string>
+    <string name="menu_refresh">Sync transactions</string>
 </resources>

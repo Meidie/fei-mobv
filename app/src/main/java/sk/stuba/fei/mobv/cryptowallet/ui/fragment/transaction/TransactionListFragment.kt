@@ -1,9 +1,7 @@
 package sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -18,6 +16,7 @@ import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.TransactionListAdapter
+import sk.stuba.fei.mobv.cryptowallet.util.visible
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModel
 
@@ -53,6 +52,7 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
             DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         )
 
+        // RecyclerView
         transactionViewModel.allTransactionAndContact.observe(viewLifecycleOwner, { transactionAndContact ->
             transactionViewModel.allTransactionWithoutContact.observe(viewLifecycleOwner, { transactionWithoutContact ->
 
@@ -80,12 +80,43 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
             })
         })
 
+        // transactions sync
+        transactionViewModel.transactionsSynced.observe(viewLifecycleOwner, {
+            binding.refreshLayout.isRefreshing = false
+        })
+
+        binding.refreshLayout.setOnRefreshListener {
+
+             transactionViewModel.syncTransactions()
+            // This method performs the actual data-refresh operation.
+            // The method calls setRefreshing(false) when it's finished.
+           // myUpdateOperation()
+        }
+
+
         binding.addTransactionButton.setOnClickListener {
             val action = TransactionListFragmentDirections.actionTransactionListFragmentToAddTransactionFragment()
             findNavController().navigate(action)
         }
 
+        setHasOptionsMenu(true)
+
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.sync_data_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sync_data_menu -> {
+                binding.refreshLayout.isRefreshing = true
+                transactionViewModel.syncTransactions()
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     override fun onDestroy() {
