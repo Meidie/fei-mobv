@@ -8,14 +8,19 @@ import org.stellar.sdk.Network
 import org.stellar.sdk.PaymentOperation
 import org.stellar.sdk.responses.AccountResponse
 import org.stellar.sdk.responses.SubmitTransactionResponse
+import org.stellar.sdk.responses.operations.CreateAccountOperationResponse
+import org.stellar.sdk.responses.operations.OperationResponse
+import org.stellar.sdk.responses.operations.PaymentOperationResponse
 import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.dao.TransactionDao
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Transaction
 import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
+import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionType
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.ArrayList
 
 class TransactionRepository(private val dao: TransactionDao, private val api: StellarApi) : IRepository<Transaction> {
 
@@ -48,15 +53,13 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
     }
 
     suspend fun sendTransaction(sourceAccount: Account, stellarAccount: AccountResponse,
-        transaction: Transaction, pin: String
+        amount: String, publicKey: String, pin: String
     ): SubmitTransactionResponse? {
 
-        transaction.accountOwnerId = sourceAccount.accountId
-
-        val newTransaction: org.stellar.sdk.Transaction = org.stellar.sdk.Transaction.Builder(
+        val newStellarTransaction: org.stellar.sdk.Transaction = org.stellar.sdk.Transaction.Builder(
             stellarAccount, Network.TESTNET)
             .addOperation(
-                PaymentOperation.Builder(transaction.publicKey, AssetTypeNative(), transaction.amount)
+                PaymentOperation.Builder(publicKey, AssetTypeNative(), amount)
                     .build()
             )
             .setTimeout(180)
@@ -66,13 +69,36 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
         val sk = Crypto().decrypt(sourceAccount.privateKeyData!!, pin)
         Log.d("STELLAR API", sk)
         val source: KeyPair = KeyPair.fromSecretSeed(sk)
-        newTransaction.sign(source)
+        newStellarTransaction.sign(source)
 
-        val response = api.sendTransaction(newTransaction)
+        val response = api.sendTransaction(newStellarTransaction)
 
         if (response != null) {
-            transaction.dateTime =
+            val newTransaction = Transaction(response.hash, sourceAccount.accountId, amount,
+                TransactionType.DEBET, publicKey,
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy"))
+            )
+            dao.insert(newTransaction)
+        }
+
+        return response
+    }
+
+    suspend fun syncTransactions(account: Account): ArrayList<OperationResponse>? {
+
+        val response = api.getTransactions(account.publicKey)
+        response?.forEach {
+
+            var ammount = ""
+            if (it is CreateAccountOperationResponse) {
+                ammount = it.startingBalance
+            } else if (it is PaymentOperationResponse){
+                ammount = it.amount
+            }
+
+            val transaction = Transaction(it.transactionHash, account.accountId, ammount,
+                if (it.sourceAccount == account.publicKey) TransactionType.DEBET else TransactionType.CREDIT,
+                account.publicKey, it.createdAt)
             dao.insert(transaction)
         }
 

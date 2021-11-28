@@ -22,7 +22,7 @@ import sk.stuba.fei.mobv.cryptowallet.util.OneTimeEvent
 class TransactionViewModel(
     private val transactionRepository: TransactionRepository,
     private val accountRepository: AccountRepository,
-    private val contactRepository: ContactRepository) : ViewModel() {
+    contactRepository: ContactRepository) : ViewModel() {
 
     val keyError = ObservableField<FormError>()
     val amountError = ObservableField<FormError>()
@@ -69,7 +69,6 @@ class TransactionViewModel(
         transactionRepository.insert(transaction)
     }
 
-    // TODO loading ked sa kym sa caka na dokoncenie transakcie
     // TODO doplniť možnosť zadať maximálne current balance (asi by bolo fajn aj niekde zobrazit aktualny kapital)
     // TODO overenie existenie PK na ktory posielame
     fun sendTransaction() {
@@ -85,11 +84,7 @@ class TransactionViewModel(
                 viewModelScope.launch(Dispatchers.IO) {
 
                     _progressBarVisible.postValue(true)
-
-                    val newTransaction =
-                        Transaction(0L,activeAccount.accountId,  amount!!.replace(",","."),
-                            TransactionType.DEBET, pk!!,"")
-                   val response = transactionRepository.sendTransaction(activeAccount, it, newTransaction, pin!!)
+                   val response = transactionRepository.sendTransaction(activeAccount, it, amount!!.replace(",","."),  pk!!, pin!!)
 
                     if(response!= null && response.isSuccess){
                         _transactionSentAction.postValue(
@@ -113,8 +108,7 @@ class TransactionViewModel(
     }
 
     fun syncTransactions() = viewModelScope.launch(Dispatchers.IO) {
-        Thread.sleep(3000)
-        //TODO sync logic
+        transactionRepository.syncTransactions(activeAccount)
         _transactionsSynced.postValue(OneTimeEvent())
     }
 
