@@ -3,6 +3,7 @@ package sk.stuba.fei.mobv.cryptowallet.database.entity
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
@@ -10,8 +11,9 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "transaction_table")
 data class Transaction(
 
-    @PrimaryKey(autoGenerate = true)
-    val transactionId: Long,
+    // transaction_hash
+    @PrimaryKey
+    val transactionId: String,
 
     @ColumnInfo(name = "account_owner_id")
     var accountOwnerId: Long,
@@ -26,6 +28,5 @@ data class Transaction(
     var publicKey: String,
 
     @ColumnInfo(name = "dateTime_created")
-    var dateTime: String
-
+    var dateTime: String,
 ): Parcelable

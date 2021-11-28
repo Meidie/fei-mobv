@@ -76,7 +76,6 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
                 }
 
                 adapter.submitList(transactions.sortedBy { t -> t.transaction.transactionId })
-
             })
         })
 
@@ -86,13 +85,8 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
         })
 
         binding.refreshLayout.setOnRefreshListener {
-
              transactionViewModel.syncTransactions()
-            // This method performs the actual data-refresh operation.
-            // The method calls setRefreshing(false) when it's finished.
-           // myUpdateOperation()
         }
-
 
         binding.addTransactionButton.setOnClickListener {
             val action = TransactionListFragmentDirections.actionTransactionListFragmentToAddTransactionFragment()
