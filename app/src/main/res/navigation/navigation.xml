@@ -109,17 +109,18 @@
     </fragment>
     <fragment
         android:id="@+id/addTransactionFragment"
-        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.AddTransactionFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.TransactionAddFragment"
         android:label="New transaction"
-        tools:layout="@layout/fragment_add_transaction">
+        tools:layout="@layout/fragment_transaction_add">
         <action
-            android:id="@+id/action_addTransactionFragment_to_transactionListFragment"
+            android:id="@+id/action_transactionAddFragment_to_transactionListFragment"
             app:destination="@id/transactionListFragment" />
     </fragment>
     <fragment
         android:id="@+id/transactionDetailFragment"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.transaction.TransactionDetailFragment"
-        android:label="TransactionDetailFragment" >
+        android:label="Transaction detail"
+        tools:layout="@layout/fragment_transaction_detail">
         <action
             android:id="@+id/action_transactionDetailFragment_to_transactionListFragment"
             app:destination="@id/transactionListFragment" />

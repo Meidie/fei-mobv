@@ -15,6 +15,7 @@ import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
+import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.TransactionListAdapter
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModelFactory
@@ -39,7 +40,11 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
         val database = AppDatabase.getDatabase(application)
         transactionViewModel = ViewModelProvider(
             this,
-            TransactionViewModelFactory(TransactionRepository(database.transactionDao()), StellarApi(), AccountRepository(database.accountDao(), StellarApi()))
+            TransactionViewModelFactory(
+                TransactionRepository(database.transactionDao(), StellarApi()),
+                AccountRepository(database.accountDao(), StellarApi()),
+                ContactRepository(database.contactDao())
+            )
         )[TransactionViewModel::class.java]
 
         val adapter = TransactionListAdapter()
@@ -51,7 +56,6 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
         transactionViewModel.allTransactionAndContact.observe(viewLifecycleOwner, { transactionAndContact ->
             transactionViewModel.allTransactionWithoutContact.observe(viewLifecycleOwner, { transactionWithoutContact ->
 
-
                 if (transactionAndContact.isEmpty() && transactionWithoutContact.isEmpty()) {
                     binding.transactionListRecycleView.visibility = View.GONE
                     binding.emptyView.visibility = View.VISIBLE
@@ -60,14 +64,18 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
                     binding.emptyView.visibility = View.GONE
                 }
 
-                val test: MutableList<TransactionAndContact> = mutableListOf()
-                test.addAll(transactionAndContact)
+                val transactions: MutableList<TransactionAndContact> = mutableListOf()
+                transactions.addAll(transactionAndContact)
 
                 for (transaction in transactionWithoutContact) {
-                    test.add(TransactionAndContact(transaction, Contact(0L, transaction.accountOwnerId, "", transaction.publicKey)))
+                    transactions.add(
+                        TransactionAndContact(transaction,
+                            Contact(0L, transaction.accountOwnerId, "", transaction.publicKey)
+                        )
+                    )
                 }
 
-                adapter.submitList(test.sortedBy { t -> t.transaction.transactionId })
+                adapter.submitList(transactions.sortedBy { t -> t.transaction.transactionId })
 
             })
         })

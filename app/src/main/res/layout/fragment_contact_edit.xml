@@ -5,7 +5,7 @@
     tools:context=".ui.fragment.contact.ContactEditFragment">
 
     <data>
-        <import type="sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel.FormError" />
+        <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
 
         <variable
             name="viewModel"

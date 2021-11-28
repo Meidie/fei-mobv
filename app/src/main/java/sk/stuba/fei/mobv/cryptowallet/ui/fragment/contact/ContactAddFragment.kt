@@ -48,7 +48,7 @@ class ContactAddFragment : Fragment() {
             it?.let {
                 if (it.first) {
                     Toast.makeText(requireContext(), it.second, Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.action_contactAddFragment_to_contactListFragment)
+                    findNavController().navigate(it.third)
                 } else {
                     Toast.makeText(requireContext(), it.second, Toast.LENGTH_LONG).show()
                 }

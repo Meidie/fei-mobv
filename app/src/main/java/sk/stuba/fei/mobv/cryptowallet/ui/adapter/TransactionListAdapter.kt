@@ -24,7 +24,7 @@ class TransactionListAdapter: ListAdapter<TransactionAndContact, TransactionList
         }
 
         fun bind(currentItem: TransactionAndContact) {
-            binding.image.setBackgroundResource(if (currentItem.transaction.type.name.equals(TransactionType.CREDIT.name))
+            binding.image.setBackgroundResource(if (currentItem.transaction.type.name == TransactionType.CREDIT.name)
                 R.drawable.ic_baseline_trending_up_green_24 else R.drawable.ic_baseline_trending_down_red_24)
             binding.recipient.text = if (currentItem.contact.name != "") currentItem.contact.name else currentItem.contact.publicKey
             binding.amount.text = currentItem.transaction.amount

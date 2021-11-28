@@ -12,19 +12,12 @@ import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
+import sk.stuba.fei.mobv.cryptowallet.util.FormError
 
 class ContactViewModel(
     private val contactRepository: ContactRepository,
     private val accountRepository: AccountRepository
 ) : ViewModel() {
-
-    enum class FormError(val message: String) {
-        NO_ERROR(""),
-        MISSING_NAME("Value is required!"),
-        MISSING_PK("Value is required!"),
-        INVALID_PK_FORMAT("Key must start with \'G\' character"),
-        INVALID_PK_LENGTH("Key must contain 56 alphanumeric characters")
-    }
 
     val nameError = ObservableField<FormError>()
     val keyError = ObservableField<FormError>()
@@ -142,12 +135,12 @@ class ContactViewModel(
     private fun isFormValid(name: String?, key: String?): Boolean {
 
         if (name.isNullOrEmpty()) {
-            nameError.set(FormError.MISSING_NAME)
+            nameError.set(FormError.MISSING_VALUE)
         }
 
         when {
             key.isNullOrEmpty() -> {
-                keyError.set(FormError.MISSING_PK)
+                keyError.set(FormError.MISSING_VALUE)
             }
             key.length != 56 -> {
                 keyError.set(FormError.INVALID_PK_LENGTH)
@@ -157,7 +150,7 @@ class ContactViewModel(
             }
         }
 
-        return !(nameError.get()!! != FormError.NO_ERROR || keyError.get()!! != FormError.NO_ERROR)
+        return (nameError.get()!! == FormError.NO_ERROR && keyError.get()!! == FormError.NO_ERROR)
     }
 
     private fun validateKey(key: String) {
