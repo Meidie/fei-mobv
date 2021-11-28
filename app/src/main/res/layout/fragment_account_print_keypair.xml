@@ -28,7 +28,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Please save your private and public keys" />
+        android:text="@string/please_save_your_private_and_public_keys" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Public Key"
+        android:hint="@string/public_key"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +48,7 @@
             android:enabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@{viewmodel.keypair.privateKey}"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,7 +60,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Private Key"
+        android:hint="@string/private_key"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,6 +70,7 @@
             android:enabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@{viewmodel.keypair.publicKey}"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,7 +81,7 @@
         android:layout_height="48dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/buttonbackground"
-        android:text="Continue"
+        android:text="@string/continue_button"
         android:padding="5dip"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"

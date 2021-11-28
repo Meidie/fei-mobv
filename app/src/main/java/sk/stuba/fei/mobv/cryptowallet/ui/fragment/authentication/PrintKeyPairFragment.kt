@@ -11,7 +11,7 @@ import androidx.navigation.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
-import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentPrintKeypairBinding
+import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAccountPrintKeypairBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
@@ -19,7 +19,7 @@ import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
 
 class PrintKeyPairFragment : Fragment() {
 
-    private lateinit var binding: FragmentPrintKeypairBinding
+    private lateinit var binding: FragmentAccountPrintKeypairBinding
     private lateinit var accountViewModel: AccountViewModel
 
     override fun onCreateView(
@@ -28,7 +28,7 @@ class PrintKeyPairFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login , container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_print_keypair , container, false)
 
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)

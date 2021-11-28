@@ -26,6 +26,11 @@
     <string name="password">Enter password</string>
     <string name="loginbutton">Login</string>
     <string name="exist">Already have account?</string>
+    <string name="confirm">Confirm</string>
+    <string name="privatekey">Enter Private Key</string>
+    <string name="signup">Sign Up</string>
+    <string name="register">Register</string>
+    <string name="register_heading">Register Account</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -46,4 +51,8 @@
     <string name="date">Transaction date</string>
     <string name="contact">Contact</string>
     <string name="menu_refresh">Sync transactions</string>
+    <string name="continue_button">Continue</string>
+    <string name="private_key">Private Key</string>
+    <string name="public_key">Public Key</string>
+    <string name="please_save_your_private_and_public_keys">Please save your private and public keys</string>
 </resources>

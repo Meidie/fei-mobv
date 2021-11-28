@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
-import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentImportAccountBinding
+import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAccountImportBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
@@ -21,7 +19,7 @@ import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
 
 class ImportAccountFragment: Fragment() {
 
-    private lateinit var binding: FragmentImportAccountBinding
+    private lateinit var binding: FragmentAccountImportBinding
     private lateinit var accountViewModel: AccountViewModel
 
     override fun onCreateView(
@@ -30,7 +28,7 @@ class ImportAccountFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login , container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_account_login , container, false)
 
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)

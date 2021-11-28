@@ -5,6 +5,7 @@
     tools:context=".ui.fragment.authentication.LoginFragment">
 
     <data>
+        <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
         <variable
             name="viewmodel"
             type="sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel"/>
@@ -29,7 +30,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Login" />
+            android:text="@string/loginbutton" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/privateKey"
@@ -39,10 +40,11 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
-            android:hint="Enter Private Key"
+            android:hint="@string/privatekey"
             android:textColorHint="@color/white"
             app:counterEnabled="true"
             app:counterMaxLength="56"
+            app:counterTextColor="@color/white"
             app:endIconMode="clear_text"
             app:helperText="*Required"
             app:helperTextTextColor="@color/red"
@@ -53,12 +55,14 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/heading"
-            app:startIconDrawable="@drawable/ic_key" >
+            app:startIconDrawable="@drawable/ic_key"
+            app:errorText="@{viewmodel.keyError.message}">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addKeyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -83,7 +87,7 @@
             app:layout_constraintTop_toBottomOf="@+id/privateKey" />
 
         <Button
-            android:id="@+id/singup"
+            android:id="@+id/signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -91,7 +95,7 @@
             android:layout_marginEnd="16dp"
             android:gravity="center"
             android:background="@drawable/buttonoutline"
-            android:text="Sign Up"
+            android:text="@string/signup"
             android:layout_marginTop="24dp"
             android:textColor="@color/white"
             android:textSize="21sp"
