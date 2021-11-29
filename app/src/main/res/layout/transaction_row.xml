@@ -32,23 +32,31 @@
             android:maxLines="2"
             android:layout_marginStart="20dp"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/image"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.492"
             tools:text="@string/recipient" />
 
         <TextView
             android:id="@+id/amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:maxWidth="50dp"
-            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"
+            android:maxWidth="250dp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toBottomOf="@id/recipient"
+            tools:text="@string/amount" />
+
+        <ImageView
+            android:id="@+id/rowSideIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/contact_detail"
+            android:src="@drawable/ic_chevron_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/amount" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

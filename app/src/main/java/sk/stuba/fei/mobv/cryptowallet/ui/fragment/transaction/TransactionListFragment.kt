@@ -75,7 +75,7 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
                     )
                 }
 
-                adapter.submitList(transactions.sortedBy { t -> t.transaction.transactionId })
+                adapter.submitList(transactions.sortedBy { t -> t.transaction.dateTime }.reversed())
             })
         })
 
@@ -99,12 +99,12 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.sync_data_menu, menu)
+        inflater.inflate(R.menu.sync_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.sync_data_menu -> {
+            R.id.sync_menu -> {
                 binding.refreshLayout.isRefreshing = true
                 transactionViewModel.syncTransactions()
             }

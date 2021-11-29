@@ -98,7 +98,7 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
 
             val transaction = Transaction(it.transactionHash, account.accountId, ammount,
                 if (it.sourceAccount == account.publicKey) TransactionType.DEBET else TransactionType.CREDIT,
-                account.publicKey, it.createdAt)
+                account.publicKey, LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy")))
             dao.insert(transaction)
         }
 

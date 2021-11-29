@@ -106,8 +106,6 @@ class TransactionViewModel(
         }
     }
 
-    // TODO asi by sme to mali volat automaticky pri zobrazeni fargmentu
-    //  len neviem ci to nebude trochu otravne
     fun syncTransactions() = viewModelScope.launch(Dispatchers.IO) {
         transactionRepository.syncTransactions(activeAccount)
         _transactionsSynced.postValue(OneTimeEvent())
@@ -197,7 +195,15 @@ class TransactionViewModel(
     private fun validateAmount(amount: String) {
         if (amount.startsWith("-")) {
             amountError.set(FormError.NEGATIVE_VALUE)
+        } else if(amount.contains(",")) {
+            amountError.set(FormError.INCORRECT_CHAR)
         }
+        // TODO: zapojit max
+//        else if(amount.toFloat() > 100){
+//            val error = FormError.ACCOUNT_BALANCE_EXCEEDED
+//            error.message += "123"
+//            amountError.set(error)
+//        }
     }
 
     private fun validatePin(pin: String) {
