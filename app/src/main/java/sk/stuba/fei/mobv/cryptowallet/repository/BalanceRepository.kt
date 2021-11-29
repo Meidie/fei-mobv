@@ -25,4 +25,8 @@ class BalanceRepository(private val dao: BalanceDao) : IRepository<Balance> {
     fun getAllBalances(): LiveData<List<Balance>> {
         return dao.getAllBalances()
     }
+
+    fun updateBalances(amount: String, currency: String) {
+        return dao.updateAmount(amount, currency)
+    }
 }

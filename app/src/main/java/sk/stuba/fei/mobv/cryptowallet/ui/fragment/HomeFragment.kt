@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentHomeBinding
+import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.home.adapter.HomeAdapter
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.balance.BalanceViewModel
@@ -31,9 +33,11 @@ class HomeFragment : Fragment() {
         val database = AppDatabase.getDatabase(application)
         balanceViewModel = ViewModelProvider(
             this,
-            BalanceViewModelFactory(
+            BalanceViewModelFactory(AccountRepository(database.accountDao(), StellarApi()),
                 BalanceRepository(database.balanceDao()))
         )[BalanceViewModel::class.java]
+
+        balanceViewModel.updateBalances()
 
         val adapter = HomeAdapter()
         binding.recyclerViewer.adapter = adapter
