@@ -5,6 +5,7 @@
     android:id="@+id/navigation"
     app:startDestination="@id/loginFragment">
 
+    <action android:id="@+id/action_global_accountDetailFragment" app:destination="@id/accountDetailFragment" />
     <action android:id="@+id/action_global_transactionListFragment" app:destination="@id/transactionListFragment" />
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment"
         app:popUpTo="@+id/navigation" app:popUpToInclusive="true" />
@@ -142,4 +143,9 @@
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.LoginActiveFragment"
         android:label="Login"
         tools:layout="@layout/fragment_account_active_login" />
+    <fragment
+        android:id="@+id/accountDetailFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.account.AccountDetailFragment"
+        android:label="Account info"
+        tools:layout="@layout/fragment_account_detail" />
 </navigation>

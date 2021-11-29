@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_baseline_home_24"
@@ -15,5 +14,10 @@
         android:id="@+id/contactListFragment"
         android:icon="@drawable/ic_baseline_contacts_24"
         android:title="@string/nav_contacts"/>
+
+    <item
+        android:id="@+id/accountDetailFragment"
+        android:icon="@drawable/ic_account_circle"
+        android:title="@string/nav_account"/>
 
 </menu>
