@@ -15,7 +15,7 @@ import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAccountPrintKeypairBin
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AccountViewModelFactory
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModelFactory
 
 class PrintKeyPairFragment : Fragment() {
 
@@ -34,7 +34,7 @@ class PrintKeyPairFragment : Fragment() {
         val database = AppDatabase.getDatabase(application)
         authenticationViewModel = ViewModelProvider(
             this,
-            AccountViewModelFactory(
+            AuthenticationViewModelFactory(
                 AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi()),
                 BalanceRepository(database.balanceDao())
             )

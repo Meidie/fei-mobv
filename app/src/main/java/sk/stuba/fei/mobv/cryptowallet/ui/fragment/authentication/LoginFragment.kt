@@ -13,7 +13,7 @@ import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAccountLoginBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AccountViewModelFactory
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel
 
 class LoginFragment : Fragment() {
@@ -33,7 +33,7 @@ class LoginFragment : Fragment() {
         val database = AppDatabase.getDatabase(application)
         authenticationViewModel = ViewModelProvider(
             this,
-            AccountViewModelFactory(
+            AuthenticationViewModelFactory(
                 AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi()),
                 BalanceRepository(database.balanceDao())
             )
