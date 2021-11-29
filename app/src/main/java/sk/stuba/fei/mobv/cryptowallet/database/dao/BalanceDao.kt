@@ -15,5 +15,5 @@ interface BalanceDao : IDao<Balance> {
     suspend fun find(id: Long): Balance?
 
     @Query("SELECT * FROM balance_table")
-    fun getAllContacts(): LiveData<List<Balance>>
+    fun getAllBalances(): LiveData<List<Balance>>
 }

@@ -1,5 +1,6 @@
 package sk.stuba.fei.mobv.cryptowallet.repository
 
+import androidx.lifecycle.LiveData
 import sk.stuba.fei.mobv.cryptowallet.database.dao.BalanceDao
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Balance
 
@@ -19,5 +20,9 @@ class BalanceRepository(private val dao: BalanceDao) : IRepository<Balance> {
 
     override suspend fun delete(entity: Balance) {
         dao.delete(entity)
+    }
+
+    fun getAllBalances(): LiveData<List<Balance>> {
+        return dao.getAllBalances()
     }
 }

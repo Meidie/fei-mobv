@@ -22,6 +22,7 @@
     <string name="balance_label">Current balance of your account</string>
     <string name="no_contact_available">No contacts available</string>
     <string name="no_transactions_available">No transactions available</string>
+    <string name="no_balance_available">No balance available</string>
     <string name="login">Enter username</string>
     <string name="password">Enter password</string>
     <string name="loginbutton">Login</string>

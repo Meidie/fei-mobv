@@ -1,35 +1,61 @@
 package sk.stuba.fei.mobv.cryptowallet.ui.home.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import sk.stuba.fei.mobv.cryptowallet.R
+import sk.stuba.fei.mobv.cryptowallet.database.entity.Balance
+import sk.stuba.fei.mobv.cryptowallet.databinding.BalanceRowBinding
 
-class HomeAdapter(private val balanceList: List<String>) : RecyclerView.Adapter<HomeAdapter.BalanceRowViewHolder>(){
+
+class HomeAdapter: ListAdapter<Balance, HomeAdapter.BalanceRowViewHolder>(
+    BalanceDiffCallback()
+) {
+
+    class BalanceRowViewHolder(private val binding: BalanceRowBinding): RecyclerView.ViewHolder(binding.root) {
+        companion object {
+            fun create(parent: ViewGroup): BalanceRowViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = BalanceRowBinding.inflate(layoutInflater, parent, false)
+                return BalanceRowViewHolder(binding)
+            }
+        }
+
+        fun bind(currentItem: Balance) {
+            binding.balance.text = currentItem.amount.dropLast(3)
+            if (currentItem.currency == "native"){
+                binding.currency.text = "XLM"
+                binding.currencyName.text = "Stellar Lumen"
+            }
+            else{
+                binding.currency.text = currentItem.currency
+                binding.currencyName.text = currentItem.currency
+            }
+        }
+
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BalanceRowViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.balance_row,
-        parent, false)
-
-        return BalanceRowViewHolder(itemView)
+        return BalanceRowViewHolder.create(parent)
     }
 
-    //TODO natiahnut balance z uctu
     override fun onBindViewHolder(holder: BalanceRowViewHolder, position: Int) {
-        val currentItem = balanceList[position]
+        val currentItem = getItem(position)
+        holder.bind(currentItem)
+    }
+}
 
-        holder.textViewBalance.text = currentItem
+class BalanceDiffCallback: DiffUtil.ItemCallback<Balance>(){
+    override fun areItemsTheSame(oldItem: Balance, newItem: Balance): Boolean {
+        return oldItem.balanceId == newItem.balanceId
     }
 
-    override fun getItemCount() = balanceList.size
-
-    class BalanceRowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val textViewBalance: TextView = itemView.findViewById(R.id.balance)
-        val textViewCurrencyName: TextView = itemView.findViewById(R.id.currency_name)
-        val textViewCurrency: TextView = itemView.findViewById(R.id.currency)
+    override fun areContentsTheSame(oldItem: Balance, newItem: Balance): Boolean {
+        return oldItem == newItem
     }
-
 
 }
+
