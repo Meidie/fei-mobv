@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 
-class AccountViewModelFactory(
+class AuthenticationViewModelFactory(
     private val accountRepository: AccountRepository,
     private val balanceRepository: BalanceRepository
 ) : ViewModelProvider.Factory {
