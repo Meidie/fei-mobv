@@ -26,7 +26,7 @@ class TransactionDetailFragment : Fragment() {
         binding.publicKey.setText(transaction.transaction.publicKey)
         binding.amount.setText(transaction.transaction.amount)
         binding.date.setText(transaction.transaction.dateTime)
-        binding.contact.setText(if (transaction.contact.name != "") transaction.contact.name else "No contact.")
+        binding.contact.setText(if (transaction.contact.name != "") transaction.contact.name else "Contact not saved")
         binding.image.setBackgroundResource(if (transaction.transaction.type.name.equals(TransactionType.CREDIT.name))
             R.drawable.ic_baseline_trending_up_green_24 else R.drawable.ic_baseline_trending_down_red_24)
 

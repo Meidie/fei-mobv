@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.navHostFragment)
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homeFragment, R.id.transactionListFragment, R.id.contactListFragment,
-            R.id.loginFragment)
+            R.id.loginFragment, R.id.loginActiveFragment, R.id.accountPrintKeyPair)
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -37,7 +37,8 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destination.id == R.id.loginFragment || destination.id == R.id.registerFragment
-                || destination.id == R.id.accountPrintKeyPair || destination.id == R.id.importAccount) {
+                || destination.id == R.id.accountPrintKeyPair || destination.id == R.id.importAccount
+                || destination.id == R.id.loginActiveFragment) {
                 binding.bottomNavigation.visibility = View.GONE
             } else {
                 binding.bottomNavigation.visibility = View.VISIBLE

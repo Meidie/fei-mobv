@@ -2,14 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.fragment.authentication.RegisterFragment">
+    tools:context=".ui.fragment.authentication.LoginActiveFragment">
 
     <data>
         <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
         <variable
             name="viewmodel"
-            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel" />
+            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel"/>
     </data>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,15 +22,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginTop="48dp"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="40sp"
             android:textColor="@color/white"
+            android:textSize="40sp"
             android:textStyle="bold"
-            android:layout_marginTop="50dp"
-            android:text="@string/register_heading"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            android:text="@string/loginbutton" />
 
         <com.chaos.view.PinView
             android:id="@+id/pin"
@@ -61,25 +61,6 @@
             app:viewType="rectangle"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/registerButton"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginBottom="150dp"
-            android:background="@drawable/button_background"
-            android:onClick="@{ () -> viewmodel.createAccount(pin.getText().toString())}"
-            android:padding="5dip"
-            android:text="@string/register"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <TextView
             android:id="@+id/Login"
             android:layout_width="match_parent"
@@ -97,22 +78,24 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/existButton"
+            android:id="@+id/loginButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginStart="60dp"
             android:layout_marginEnd="60dp"
-            android:background="@drawable/button_outline"
-            android:text="@string/exist"
+            android:layout_marginBottom="150dp"
+            android:background="@drawable/button_background"
+            android:onClick="@{() -> viewmodel.loginActive(pin.getText().toString())}"
+            android:padding="5dp"
+            android:text="@string/log_in"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="21sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/registerButton"
-            app:layout_constraintVertical_bias="0.3" />
+            tools:ignore="DuplicateSpeakableTextCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

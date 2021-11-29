@@ -30,7 +30,7 @@
     <string name="privatekey">Enter Private Key</string>
     <string name="signup">Sign Up</string>
     <string name="register">Register</string>
-    <string name="register_heading">Register Account</string>
+    <string name="register_heading">Register account</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -55,4 +55,8 @@
     <string name="private_key">Private Key</string>
     <string name="public_key">Public Key</string>
     <string name="please_save_your_private_and_public_keys">Please save your private and public keys</string>
+    <string name="loading">Loading…</string>
+    <string name="log_in">Login</string>
+    <string name="import_account">Import Account</string>
+    <string name="import_button">Import</string>
 </resources>

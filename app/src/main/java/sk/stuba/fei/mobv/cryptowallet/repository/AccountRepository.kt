@@ -1,5 +1,6 @@
 package sk.stuba.fei.mobv.cryptowallet.repository
 
+import androidx.lifecycle.LiveData
 import org.stellar.sdk.responses.AccountResponse
 import retrofit2.Response
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
@@ -16,6 +17,10 @@ class AccountRepository(private val dao: AccountDao, private val api: StellarApi
 
     suspend fun findByPublicKey(id: String): Account? {
         return dao.findByPublicKey(id)
+    }
+
+    suspend fun doesActiveAccountsExistAsync(): Boolean {
+        return dao.doesActiveAccountsExistAsync()
     }
 
     override suspend fun insert(entity: Account): Long {
@@ -36,6 +41,10 @@ class AccountRepository(private val dao: AccountDao, private val api: StellarApi
 
     fun getAccountInfo(accountId: String): AccountResponse? {
         return api.getAccount(accountId)
+    }
+
+    fun doesActiveAccountsExist(): LiveData<Boolean> {
+        return dao.doesActiveAccountsExist()
     }
 
     suspend fun createAccount(accountId: String): Response<Void> {

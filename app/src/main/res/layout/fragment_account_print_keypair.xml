@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel" />
+            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel" />
     </data>
 
 
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/buttonbackground"
+        android:background="@drawable/button_background"
         android:text="@string/continue_button"
         android:padding="5dip"
         android:layout_marginStart="16dp"

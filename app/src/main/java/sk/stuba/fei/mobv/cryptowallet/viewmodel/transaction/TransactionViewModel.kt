@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 import org.stellar.sdk.responses.AccountResponse
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.entity.*
@@ -107,6 +106,8 @@ class TransactionViewModel(
         }
     }
 
+    // TODO asi by sme to mali volat automaticky pri zobrazeni fargmentu
+    //  len neviem ci to nebude trochu otravne
     fun syncTransactions() = viewModelScope.launch(Dispatchers.IO) {
         transactionRepository.syncTransactions(activeAccount)
         _transactionsSynced.postValue(OneTimeEvent())

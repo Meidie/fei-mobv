@@ -14,7 +14,7 @@ import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
-import sk.stuba.fei.mobv.cryptowallet.ui.adapter.contact.ContactListAdapter
+import sk.stuba.fei.mobv.cryptowallet.ui.adapter.ContactListAdapter
 import sk.stuba.fei.mobv.cryptowallet.util.visible
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
@@ -83,7 +83,7 @@ class ContactListFragment : Fragment() {
             R.id.delete_menu -> deleteAllContacts()
             R.id.sign_out ->  {
                 // TODO sign out
-               // contactViewModel.signOut()
+                contactViewModel.signOut()
                 findNavController().navigate(R.id.action_global_loginFragment)
             }
             else -> return super.onOptionsItemSelected(item)

@@ -24,6 +24,12 @@ interface AccountDao : IDao<Account> {
     @Query("SELECT * from account_table WHERE active_account")
     suspend fun findActive(): Account
 
+    @Query("SELECT EXISTS(SELECT 1 FROM account_table  WHERE  active_account);")
+    suspend fun doesActiveAccountsExistAsync() : Boolean
+
+    @Query("SELECT EXISTS(SELECT 1 FROM account_table  WHERE  active_account);")
+    fun doesActiveAccountsExist() : LiveData<Boolean>
+
     @androidx.room.Transaction
     @Query("SELECT * FROM account_table WHERE accountId = :id")
     fun getAccountsWithTransactionsContacts(id: Long): LiveData<List<AccountWithTransactions>>

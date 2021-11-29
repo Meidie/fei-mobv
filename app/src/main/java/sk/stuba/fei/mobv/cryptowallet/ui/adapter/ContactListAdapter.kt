@@ -1,4 +1,4 @@
-package sk.stuba.fei.mobv.cryptowallet.ui.adapter.contact
+package sk.stuba.fei.mobv.cryptowallet.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

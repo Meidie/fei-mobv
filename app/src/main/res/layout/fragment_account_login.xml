@@ -8,7 +8,7 @@
         <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
         <variable
             name="viewmodel"
-            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel"/>
+            type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel"/>
     </data>
 
 
@@ -16,7 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background">
-
 
         <TextView
             android:id="@+id/heading"
@@ -34,75 +33,81 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/privateKey"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="24dp"
             android:hint="@string/privatekey"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/black"
+            app:boxStrokeColor="@color/white"
             app:counterEnabled="true"
             app:counterMaxLength="56"
             app:counterTextColor="@color/white"
             app:endIconMode="clear_text"
-            app:helperText="*Required"
-            app:helperTextTextColor="@color/red"
             app:errorEnabled="true"
-            app:boxStrokeColor="@color/white"
             app:errorIconDrawable="@drawable/ic_error"
+            app:errorText="@{viewmodel.keyError.message}"
+            app:errorTextColor="@color/errorDark"
+            app:helperText="*Required"
+            app:helperTextTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/heading"
-            app:startIconDrawable="@drawable/ic_key"
-            app:errorText="@{viewmodel.keyError.message}">
+            app:startIconDrawable="@drawable/ic_key">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addKeyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:inputType="textPersonName"
-                android:textColor="@color/white"/>
+                android:textColor="@color/black"
+                android:textColorHint="@color/white"
+                tools:ignore="TextContrastCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <Button
-            android:id="@+id/loginbutton"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/buttonbackground"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginBottom="150dp"
+            android:background="@drawable/button_background"
             android:onClick="@{ () -> viewmodel.login(addKeyText.getText().toString())}"
-            android:text="Log in"
-            android:padding="5dip"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
+            android:padding="5dp"
+            android:text="@string/log_in"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="21sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/privateKey" />
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
-        <Button
-            android:id="@+id/signup"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/button_outline"
             android:gravity="center"
-            android:background="@drawable/buttonoutline"
-            android:text="@string/signup"
-            android:layout_marginTop="24dp"
+            android:text="@string/register"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="21sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
+            app:layout_constraintTop_toBottomOf="@+id/loginButton"
+            app:layout_constraintVertical_bias="0.3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

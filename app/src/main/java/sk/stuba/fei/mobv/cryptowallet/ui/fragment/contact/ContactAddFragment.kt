@@ -28,9 +28,8 @@ class ContactAddFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         _binding = FragmentContactAddBinding.inflate(inflater, container, false)
-
-
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)
         contactViewModel = ViewModelProvider(

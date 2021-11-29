@@ -11,15 +11,15 @@ import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentHomeBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AccountViewModelFactory
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var accountViewModel: AccountViewModel
+//    private lateinit var accountViewModel: AuthenticationViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,13 +30,13 @@ class HomeFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)
-        accountViewModel = ViewModelProvider(
-            this,
-            AccountViewModelFactory(
-                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi()),
-                BalanceRepository(database.balanceDao())
-            )
-        )[AccountViewModel::class.java]
+//        accountViewModel = ViewModelProvider(
+//            this,
+//            AccountViewModelFactory(
+//                AccountRepository(database.accountDao(), RemoteDataSource.getStellarApi()),
+//                BalanceRepository(database.balanceDao())
+//            )
+//        )[AuthenticationViewModel::class.java]
 
         return binding.root
     }

@@ -6,11 +6,13 @@
     app:startDestination="@id/loginFragment">
 
     <action android:id="@+id/action_global_transactionListFragment" app:destination="@id/transactionListFragment" />
-    <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
+    <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment"
+        app:popUpTo="@+id/navigation" app:popUpToInclusive="true" />
     <action android:id="@+id/action_global_contactListFragment" app:destination="@id/contactListFragment" />
     <action android:id="@+id/action_global_loginFragment" app:destination="@id/loginFragment"
         app:popUpTo="@+id/navigation" app:popUpToInclusive="true"/>
-
+    <action android:id="@+id/action_global_loginActiveFragment" app:destination="@id/loginActiveFragment"
+        app:popUpTo="@+id/navigation" app:popUpToInclusive="true"/>
 
     <fragment
         android:id="@+id/loginFragment"
@@ -20,14 +22,9 @@
         <action
             android:id="@+id/action_login_to_register"
             app:destination="@id/registerFragment"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right" />
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left" />
 
-        <action
-            android:id="@+id/action_loginFragment_to_importAccount"
-            app:destination="@id/importAccount"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/accountPrintKeyPair"
@@ -37,7 +34,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.RegisterFragment"
-        android:label="Register"
+        android:label="Register new account"
         tools:layout="@layout/fragment_account_register" >
         <action
             android:id="@+id/action_register_to_login"
@@ -48,13 +45,26 @@
             android:id="@+id/action_registerFragment_to_generatePair"
             app:destination="@id/accountPrintKeyPair"
             app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right" />
+            app:exitAnim="@anim/to_right"
+            app:popUpTo="@+id/navigation"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_registerFragment_to_importAccount"
+            app:destination="@id/importAccount"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left" />
+
     </fragment>
     <fragment
         android:id="@+id/importAccount"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.ImportAccountFragment"
-        android:label="Register"
+        android:label="Import account"
         tools:layout="@layout/fragment_account_import" >
+        <action
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            android:id="@+id/action_importAccount_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/contactListFragment"
@@ -127,4 +137,9 @@
             android:name="currentTransaction"
             app:argType="sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact" />
     </fragment>
+    <fragment
+        android:id="@+id/loginActiveFragment"
+        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.LoginActiveFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_account_active_login" />
 </navigation>
