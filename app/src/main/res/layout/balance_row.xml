@@ -17,10 +17,10 @@
             android:id="@+id/currency_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="15dp"
             android:text="@string/stellar"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="22sp" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:layout_below="@id/currency_name"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="10dp"
             android:layout_marginBottom="10dp"
             />
 
@@ -44,8 +44,8 @@
             android:layout_marginTop="20dp"
             android:text="200"
             android:textSize="24sp"
-            android:textColor="@color/white"
-            android:layout_marginEnd="30dp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="10dp"
 
             />
 

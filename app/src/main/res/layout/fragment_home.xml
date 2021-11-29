@@ -13,8 +13,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/background">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/heading"
@@ -22,7 +21,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textSize="40sp"
-            android:textColor="@color/white"
+            android:textColor="@color/secondaryColor"
             android:textStyle="bold"
             android:layout_marginTop="50dp"
             android:text="@string/welcome"
@@ -40,7 +39,7 @@
             android:textSize="24sp"
             android:layout_below="@id/heading"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:layout_marginTop="50dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/heading" />
@@ -62,11 +61,12 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_viewer"
-            android:padding="4dp"
+            android:padding="10dp"
             android:clipToPadding="false"
             android:layout_below="@id/home_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/balance_row"/>
 
