@@ -147,7 +147,7 @@ class AuthenticationViewModel(
         }
     }
 
-    // TODO loading pridat
+    // import
     fun importAccount() {
 
         val pin = pin.get()
@@ -164,6 +164,7 @@ class AuthenticationViewModel(
                 val pair = KeyPair.fromSecretSeed(privateKey)
 
                 viewModelScope.launch(Dispatchers.IO) {
+                    _loadingResponse.postValue("loading")
                     val acc = accountRepository.findByPublicKey(pair.accountId)
                     if(acc == null){
                         insertAccount(pair, pin)
@@ -206,5 +207,7 @@ class AuthenticationViewModel(
             }
         }
     }
+
+
 }
 
