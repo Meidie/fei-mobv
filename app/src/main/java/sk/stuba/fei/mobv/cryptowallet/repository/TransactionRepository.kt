@@ -89,16 +89,25 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
         val response = api.getTransactions(account.publicKey)
         response?.forEach {
 
-            var ammount = ""
-            if (it is CreateAccountOperationResponse) {
-                ammount = it.startingBalance
-            } else if (it is PaymentOperationResponse){
-                ammount = it.amount
-            }
+            val transaction = Transaction(
+                it.transactionHash, account.accountId, "",
+                TransactionType.DEBET, "", it.createdAt
+            )
 
-            val transaction = Transaction(it.transactionHash, account.accountId, ammount,
-                if (it.sourceAccount == account.publicKey) TransactionType.DEBET else TransactionType.CREDIT,
-                account.publicKey, LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy")))
+            if (it is CreateAccountOperationResponse) {
+                transaction.amount = it.startingBalance
+                transaction.publicKey = it.funder
+                transaction.type = TransactionType.CREDIT
+            } else if (it is PaymentOperationResponse) {
+                transaction.amount = it.amount
+                if (account.publicKey == it.from) {
+                    transaction.type = TransactionType.DEBET
+                    transaction.publicKey = it.to
+                } else {
+                    transaction.type = TransactionType.CREDIT
+                    transaction.publicKey = it.from
+                }
+            }
             dao.insert(transaction)
         }
 

@@ -57,11 +57,11 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
             transactionViewModel.allTransactionWithoutContact.observe(viewLifecycleOwner, { transactionWithoutContact ->
 
                 if (transactionAndContact.isEmpty() && transactionWithoutContact.isEmpty()) {
-                    binding.transactionListRecycleView.visibility = View.GONE
-                    binding.emptyView.visibility = View.VISIBLE
+                    binding.transactionListRecycleView.visible(false)
+                    binding.emptyView.visible(true)
                 } else {
-                    binding.transactionListRecycleView.visibility = View.VISIBLE
-                    binding.emptyView.visibility = View.GONE
+                    binding.transactionListRecycleView.visible(true)
+                    binding.emptyView.visible(false)
                 }
 
                 val transactions: MutableList<TransactionAndContact> = mutableListOf()

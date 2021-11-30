@@ -35,7 +35,6 @@ class TransactionListAdapter: ListAdapter<TransactionAndContact, TransactionList
                 )
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionRowViewHolder {
@@ -56,5 +55,4 @@ class TransactionDiffCallback: DiffUtil.ItemCallback<TransactionAndContact>(){
     override fun areContentsTheSame(oldItem: TransactionAndContact, newItem: TransactionAndContact): Boolean {
         return oldItem == newItem
     }
-
 }
