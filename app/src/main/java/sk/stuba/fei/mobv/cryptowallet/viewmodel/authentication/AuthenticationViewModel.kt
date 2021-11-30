@@ -38,6 +38,10 @@ class AuthenticationViewModel(
     val loginSuccessful: LiveData<OneTimeEvent>
         get() = _loginSuccessful
 
+    private val _signedOut: MutableLiveData<OneTimeEvent> = MutableLiveData()
+    val signedOut: LiveData<OneTimeEvent>
+        get() = _signedOut
+
     lateinit var keypair: KeyPair
 
     private val _loadingResponse: MutableLiveData<String> = MutableLiveData()
@@ -170,7 +174,14 @@ class AuthenticationViewModel(
                     }
                 }
             }
+
         }
+    }
+
+
+    fun signOut() = viewModelScope.launch {
+        accountRepository.signOut()
+        _signedOut.postValue(OneTimeEvent())
     }
 
     // helper method
