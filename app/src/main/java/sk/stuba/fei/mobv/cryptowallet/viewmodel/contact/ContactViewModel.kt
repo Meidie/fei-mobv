@@ -63,10 +63,6 @@ class ContactViewModel(
         contactRepository.deleteAll()
     }
 
-    fun signOut() = viewModelScope.launch {
-        accountRepository.signOut()
-    }
-
     fun insertContactToDatabase() {
 
         val insertContact = contact.value

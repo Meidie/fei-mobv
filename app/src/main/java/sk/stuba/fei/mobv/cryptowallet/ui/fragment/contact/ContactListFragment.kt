@@ -75,17 +75,11 @@ class ContactListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.delete_menu, menu)
-        inflater.inflate(R.menu.owerflow_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.delete_menu -> deleteAllContacts()
-            R.id.sign_out ->  {
-                // TODO sign out
-                contactViewModel.signOut()
-                findNavController().navigate(R.id.action_global_loginFragment)
-            }
             else -> return super.onOptionsItemSelected(item)
         }
 
