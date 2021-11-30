@@ -27,7 +27,7 @@ class BalanceViewModel(
         get() = _balancesSynced
 
     init {
-        updateBalances()
+        getAccount()
     }
 
     fun insert(balance: Balance) = viewModelScope.launch(Dispatchers.IO) {
@@ -43,8 +43,6 @@ class BalanceViewModel(
     }
 
     fun updateBalances() = viewModelScope.launch(Dispatchers.IO) {
-        activeAccount = accountRepository.getActiveAccount()
-        stellarAccount = accountRepository.getAccountInfo(activeAccount.publicKey)
         if (stellarAccount != null) {
             for (balance in stellarAccount!!.balances) {
                 balanceRepository.updateBalances(balance.balance, balance.assetType, activeAccount.accountId)
@@ -54,4 +52,9 @@ class BalanceViewModel(
         }
     }
 
+    private fun getAccount() = viewModelScope.launch(Dispatchers.IO){
+        activeAccount = accountRepository.getActiveAccount()
+        stellarAccount = accountRepository.getAccountInfo(activeAccount.publicKey)
+        updateBalances()
+    }
 }

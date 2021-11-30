@@ -38,7 +38,6 @@ class HomeAdapter: ListAdapter<Balance, HomeAdapter.BalanceRowViewHolder>(
 
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BalanceRowViewHolder {
         return BalanceRowViewHolder.create(parent)
     }

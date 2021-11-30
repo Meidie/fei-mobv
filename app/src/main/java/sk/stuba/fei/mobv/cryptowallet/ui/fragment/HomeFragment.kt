@@ -47,7 +47,6 @@ class HomeFragment : Fragment() {
         }
 
         setHasOptionsMenu(true)
-        balanceViewModel.updateBalances()
 
         val adapter = HomeAdapter()
         binding.recyclerViewer.adapter = adapter
