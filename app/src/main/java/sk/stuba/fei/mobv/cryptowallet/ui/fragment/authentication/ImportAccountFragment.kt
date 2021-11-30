@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import sk.stuba.fei.mobv.cryptowallet.MainActivity
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
@@ -28,7 +29,7 @@ class ImportAccountFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        val loadingDialog = LoadingDialog(activity as MainActivity)
         _binding = FragmentAccountImportBinding.inflate(inflater, container, false)
         val application = requireNotNull(this.activity).application
         val database = AppDatabase.getDatabase(application)
@@ -47,7 +48,12 @@ class ImportAccountFragment : Fragment() {
             findNavController().navigate(R.id.action_importAccount_to_loginFragment)
         }
 
+        authenticationViewModel.loadingResponse.observe(viewLifecycleOwner, {
+            loadingDialog.startLoading()
+        })
+
         authenticationViewModel.loginSuccessful.observe(viewLifecycleOwner, {
+            loadingDialog.isDismiss()
             findNavController().navigate(R.id.action_global_homeFragment)
         })
 
