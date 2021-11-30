@@ -25,7 +25,7 @@ class HomeAdapter: ListAdapter<Balance, HomeAdapter.BalanceRowViewHolder>(
 
         @SuppressLint("SetTextI18n")
         fun bind(currentItem: Balance) {
-            binding.balance.text = currentItem.amount.dropLast(2)
+            binding.balance.text = currentItem.amount
             if (currentItem.currency == "native"){
                 binding.currency.text = "XLM"
                 binding.currencyName.text = "Stellar Lumen"
