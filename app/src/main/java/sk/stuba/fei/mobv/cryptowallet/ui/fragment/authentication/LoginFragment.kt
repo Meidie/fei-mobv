@@ -42,7 +42,6 @@ class LoginFragment : Fragment() {
         binding.viewModel = authenticationViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        // TODO nejako pockat na odpoved ak to ide
         authenticationViewModel.doesActiveAccountExist.observe(viewLifecycleOwner, {
             if(it){
                 findNavController().navigate(R.id.action_global_loginActiveFragment)

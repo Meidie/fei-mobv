@@ -44,7 +44,7 @@
             android:focusable="false"
             android:clickable="true">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/publicKeyText"
                 android:text="@{viewModel.publicKey}"
                 android:cursorVisible="false"
@@ -93,7 +93,7 @@
             app:layout_constraintTop_toBottomOf="@+id/publicKeyLayout"
             app:layout_constraintVertical_bias="0.17000002">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/privateKeyText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

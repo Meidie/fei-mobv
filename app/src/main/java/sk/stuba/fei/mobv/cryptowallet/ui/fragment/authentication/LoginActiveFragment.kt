@@ -47,6 +47,10 @@ class LoginActiveFragment : Fragment() {
             findNavController().navigate(R.id.action_global_homeFragment)
         })
 
+        authenticationViewModel.signedOut.observe(viewLifecycleOwner, {
+            findNavController().navigate(R.id.action_global_loginFragment)
+        })
+
         return binding.root
     }
 }
