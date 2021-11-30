@@ -7,7 +7,7 @@
     <data>
         <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
         <variable
-            name="viewmodel"
+            name="viewModel"
             type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel" />
     </data>
 
@@ -40,6 +40,7 @@
             android:cursorVisible="true"
             android:inputType="numberPassword"
             android:padding="@dimen/pv_pin_view_item_spacing"
+            android:text="@={viewModel.pin}"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -69,7 +70,7 @@
             android:layout_marginEnd="60dp"
             android:layout_marginBottom="150dp"
             android:background="@drawable/button_background"
-            android:onClick="@{ () -> viewmodel.createAccount(pin.getText().toString())}"
+            android:onClick="@{ () -> viewModel.createAccount()}"
             android:padding="5dip"
             android:text="@string/register"
             android:textAllCaps="false"

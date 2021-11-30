@@ -7,10 +7,9 @@
     <data>
         <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
         <variable
-            name="viewmodel"
+            name="viewModel"
             type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel"/>
     </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,6 +39,7 @@
             android:cursorVisible="true"
             android:inputType="numberPassword"
             android:padding="@dimen/pv_pin_view_item_spacing"
+            android:text="@={viewModel.pin}"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -85,7 +85,7 @@
             android:layout_marginEnd="60dp"
             android:layout_marginBottom="150dp"
             android:background="@drawable/button_background"
-            android:onClick="@{() -> viewmodel.loginActive(pin.getText().toString())}"
+            android:onClick="@{() -> viewModel.loginActive()}"
             android:padding="5dp"
             android:text="@string/log_in"
             android:textAllCaps="false"

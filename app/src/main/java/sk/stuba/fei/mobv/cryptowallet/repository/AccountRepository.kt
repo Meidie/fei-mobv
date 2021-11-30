@@ -28,7 +28,7 @@ class AccountRepository(private val dao: AccountDao, private val api: StellarApi
     }
 
     override suspend fun update(entity: Account) {
-        dao.delete(entity)
+        dao.update(entity)
     }
 
     override suspend fun delete(entity: Account) {

@@ -39,7 +39,7 @@ class LoginFragment : Fragment() {
             )
         )[AuthenticationViewModel::class.java]
 
-        binding.viewmodel = authenticationViewModel
+        binding.viewModel = authenticationViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         // TODO nejako pockat na odpoved ak to ide
@@ -53,10 +53,8 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_login_to_register)
         }
 
-        authenticationViewModel.account.observe(viewLifecycleOwner, {
-            if (it != null) {
-                findNavController().navigate(R.id.action_global_homeFragment)
-            }
+        authenticationViewModel.loginSuccessful.observe(viewLifecycleOwner, {
+            findNavController().navigate(R.id.action_global_homeFragment)
         })
 
         return binding.root

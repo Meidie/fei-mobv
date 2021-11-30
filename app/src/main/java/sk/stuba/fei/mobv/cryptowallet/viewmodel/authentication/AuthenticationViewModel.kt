@@ -30,6 +30,10 @@ class AuthenticationViewModel(
     val pinError = ObservableField<FormError>()
     val keyError = ObservableField<FormError>()
 
+    val publicKey = ObservableField<String>()
+    val privateKey = ObservableField<String>()
+    val pin = ObservableField<String>()
+
     private val _loginSuccessful: MutableLiveData<OneTimeEvent> = MutableLiveData()
     val loginSuccessful: LiveData<OneTimeEvent>
         get() = _loginSuccessful
@@ -67,81 +71,112 @@ class AuthenticationViewModel(
         accountRepository.delete(account)
     }
 
-    fun loginActive(pin: String?): Job = viewModelScope.launch {
+    fun loginActive(): Job = viewModelScope.launch {
 
+        val pin = pin.get()
         when {
-            pin.isNullOrEmpty() -> {
-                pinError.set(FormError.MISSING_VALUE)
-            }
-            pin.length != 4 -> {
-                pinError.set(FormError.INVALID_PIN)
-            }
+            pin.isNullOrEmpty() -> pinError.set(FormError.MISSING_VALUE)
+            pin.length != 4 -> pinError.set(FormError.INVALID_PIN)
             else -> {
-                val exist = accountRepository.doesActiveAccountsExistAsync()
+                viewModelScope.launch(Dispatchers.IO) {
+                    val exist = accountRepository.doesActiveAccountsExistAsync()
 
-                if (exist) {
-                    val activeAccount = accountRepository.getActiveAccount()
-                    val hashedPin = Crypto().secretKeyGenerator.generateSecretKey(
-                        pin, activeAccount.pinData.salt).encoded
+                    if (exist) {
+                        val activeAccount = accountRepository.getActiveAccount()
+                        val hashedPin = Crypto().secretKeyGenerator.generateSecretKey(
+                            pin, activeAccount.pinData.salt
+                        ).encoded
 
-                    if (hashedPin.contentEquals(activeAccount.pinData.pin)) {
+                        if (hashedPin.contentEquals(activeAccount.pinData.pin)) {
+                            _loginSuccessful.postValue(OneTimeEvent())
+                        } else {
+                            pinError.set(FormError.INVALID_PIN)
+                        }
+                    } else {
+                        keyError.set(FormError.ACCOUNT_NOT_FOUND)
+                    }
+                }
+            }
+        }
+    }
+
+    fun login() {
+
+        val key = privateKey.get()
+        when {
+            key.isNullOrEmpty() -> keyError.set(FormError.MISSING_VALUE)
+            key.length != 56 -> keyError.set(FormError.INVALID_PK_LENGTH)
+            else -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    val pair = KeyPair.fromSecretSeed(key)
+                    val account: Account? = accountRepository.findByPublicKey(pair.accountId)
+
+                    if (account != null) {
+                        account.active = true
+                        accountRepository.update(account)
                         _loginSuccessful.postValue(OneTimeEvent())
                     } else {
-                        pinError.set(FormError.INVALID_PIN)
+                        keyError.set(FormError.ACCOUNT_NOT_FOUND)
                     }
-                } else {
-                    keyError.set(FormError.ACCOUNT_NOT_FOUND)
                 }
             }
         }
     }
 
-    fun login(key: String?): Job = viewModelScope.launch {
+    // Register
+    fun createAccount() {
+
+        val pin = pin.get()
         when {
-            key.isNullOrEmpty() -> {
-                keyError.set(FormError.MISSING_VALUE)
-            }
-            key.length != 56 -> {
-                keyError.set(FormError.INVALID_PK_LENGTH)
-            }
+            pin.isNullOrEmpty() -> pinError.set(FormError.MISSING_VALUE)
+            pin.length != 4 -> pinError.set(FormError.INVALID_PIN)
             else -> {
-                val pair = KeyPair.fromSecretSeed(key)
-                val account: Account? = accountRepository.findByPublicKey(pair.accountId)
+                viewModelScope.launch(Dispatchers.IO) {
+                    _loadingResponse.postValue("loading")
+                    val pair: KeyPair = KeyPair.random()
+                    val response: Response<Void> = accountRepository.createAccount(pair.accountId)
+                    _keypair.postValue(ImportAccount(pair.accountId, pair.secretSeed.toString()))
 
-                if (account != null){
-                    account.active = true
-                    accountRepository.update(account)
-                    _account.postValue(account)
-                } else {
-                    keyError.set(FormError.ACCOUNT_NOT_FOUND)
+                    if (response.isSuccessful) {
+                        insertAccount(pair, pin)
+                    }
+
+                    _accountRegistrationResponse.postValue(response)
                 }
             }
         }
     }
 
-    fun createAccount(pin: String?) = viewModelScope.launch(Dispatchers.IO) {
+    // TODO loading pridat
+    fun importAccount() {
+
+        val pin = pin.get()
+        val privateKey = privateKey.get()
 
         when {
             pin.isNullOrEmpty() -> {
                 pinError.set(FormError.MISSING_VALUE)
             }
             pin.length != 4 -> {
-                pinError.set(FormError.INVALID_PIN)
+                pinError.set(FormError.INVALID_PK_LENGTH)
             }
             else -> {
-                _loadingResponse.postValue("loading")
-                val pair: KeyPair = KeyPair.random()
-                val response: Response<Void> = accountRepository.createAccount(pair.accountId)
-                _keypair.postValue(ImportAccount(pair.accountId, pair.secretSeed.toString()))
+                val pair = KeyPair.fromSecretSeed(privateKey)
 
-                if (response.isSuccessful) {
-                    insertAccount(pair, pin)
+                viewModelScope.launch(Dispatchers.IO) {
+                    val acc = accountRepository.findByPublicKey(pair.accountId)
+                    if(acc == null){
+                        insertAccount(pair, pin)
+                        _loginSuccessful.postValue(OneTimeEvent())
+                    } else {
+                        keyError.set(FormError.SK_ALREADY_EXISTS)
+                    }
                 }
-
-                _accountRegistrationResponse.postValue(response)
             }
         }
     }
+
+    // helper method
 
     private suspend fun insertAccount(pair: KeyPair, pin: String) {
         val accountResponse = accountRepository.getAccountInfo(pair.accountId)
@@ -161,27 +196,6 @@ class AuthenticationViewModel(
 
             for (balance in accountResponse.balances) {
                 balanceRepository.insert(Balance(0L, accId, balance.assetType, balance.balance))
-            }
-        }
-    }
-
-    suspend fun import(pin: String?, privateKey: String) {
-
-        when {
-            pin.isNullOrEmpty() -> {
-                pinError.set(FormError.MISSING_VALUE)
-            }
-            pin.length != 4 -> {
-                pinError.set(FormError.INVALID_PK_LENGTH)
-            }
-            else -> {
-                val pair = KeyPair.fromSecretSeed(privateKey)
-                val acc = accountRepository.findByPublicKey(pair.accountId)
-                if(acc == null){
-                    insertAccount(pair, pin)
-                } else {
-                    keyError.set(FormError.SK_ALREADY_EXISTS)
-                }
             }
         }
     }

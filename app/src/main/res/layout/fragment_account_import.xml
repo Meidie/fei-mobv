@@ -8,7 +8,7 @@
         <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
 
         <variable
-            name="viewmodel"
+            name="viewModel"
             type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel"/>
 
     </data>
@@ -36,7 +36,7 @@
             tools:text="@string/import_account" />
 
         <TextView
-            android:id="@+id/Login"
+            android:id="@+id/enterPin"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginStart="100dp"
@@ -72,6 +72,7 @@
             app:itemRadius="4dp"
             app:itemSpacing="0dp"
             app:itemWidth="48dp"
+            android:text="@={viewModel.pin}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +83,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/privateKey"
+            android:id="@+id/privateKeyLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,7 +98,7 @@
             app:endIconMode="clear_text"
             app:errorEnabled="true"
             app:errorIconDrawable="@drawable/ic_error"
-            app:errorText="@{viewmodel.keyError.message}"
+            app:errorText="@{viewModel.keyError.message}"
             app:errorTextColor="@color/errorDark"
             app:helperText="*Required"
             app:helperTextTextColor="@color/white"
@@ -109,7 +110,8 @@
             app:startIconDrawable="@drawable/ic_key">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addKeyText"
+                android:id="@+id/privateKey"
+                android:text="@={viewModel.privateKey}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -127,7 +129,7 @@
             android:layout_marginEnd="60dp"
             android:layout_marginBottom="150dp"
             android:background="@drawable/button_background"
-            android:onClick="@{ () -> viewmodel.createAccount(pin.getText().toString())}"
+            android:onClick="@{() -> viewModel.importAccount()}"
             android:padding="5dip"
             android:text="@string/import_button"
             android:textAllCaps="false"

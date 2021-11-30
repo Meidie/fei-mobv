@@ -40,12 +40,16 @@ class ImportAccountFragment : Fragment() {
             )
         )[AuthenticationViewModel::class.java]
 
-        binding.viewmodel = authenticationViewModel
+        binding.viewModel = authenticationViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.loginButton.setOnClickListener {
             findNavController().navigate(R.id.action_importAccount_to_loginFragment)
         }
+
+        authenticationViewModel.loginSuccessful.observe(viewLifecycleOwner, {
+            findNavController().navigate(R.id.action_global_homeFragment)
+        })
 
         return binding.root
     }

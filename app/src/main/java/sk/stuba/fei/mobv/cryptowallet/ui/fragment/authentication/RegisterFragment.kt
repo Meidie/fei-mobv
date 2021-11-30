@@ -44,7 +44,7 @@ class RegisterFragment : Fragment() {
             )
         )[AuthenticationViewModel::class.java]
 
-        binding.viewmodel = authenticationViewModel
+        binding.viewModel = authenticationViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.existButton.setOnClickListener {

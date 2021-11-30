@@ -7,7 +7,7 @@
     <data>
         <import type="sk.stuba.fei.mobv.cryptowallet.util.FormError" />
         <variable
-            name="viewmodel"
+            name="viewModel"
             type="sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel"/>
     </data>
 
@@ -48,7 +48,7 @@
             app:endIconMode="clear_text"
             app:errorEnabled="true"
             app:errorIconDrawable="@drawable/ic_error"
-            app:errorText="@{viewmodel.keyError.message}"
+            app:errorText="@{viewModel.keyError.message}"
             app:errorTextColor="@color/errorDark"
             app:helperText="*Required"
             app:helperTextTextColor="@color/white"
@@ -61,6 +61,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addKeyText"
                 android:layout_width="match_parent"
+                android:text="@={viewModel.privateKey}"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:inputType="textPersonName"
@@ -78,7 +79,7 @@
             android:layout_marginEnd="60dp"
             android:layout_marginBottom="150dp"
             android:background="@drawable/button_background"
-            android:onClick="@{ () -> viewmodel.login(addKeyText.getText().toString())}"
+            android:onClick="@{ () -> viewModel.login()}"
             android:padding="5dp"
             android:text="@string/log_in"
             android:textAllCaps="false"

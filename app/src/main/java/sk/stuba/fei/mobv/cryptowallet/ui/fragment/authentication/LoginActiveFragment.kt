@@ -40,7 +40,7 @@ class LoginActiveFragment : Fragment() {
             )
         )[AuthenticationViewModel::class.java]
 
-        binding.viewmodel = authenticationViewModel
+        binding.viewModel = authenticationViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         authenticationViewModel.loginSuccessful.observe(viewLifecycleOwner, {
