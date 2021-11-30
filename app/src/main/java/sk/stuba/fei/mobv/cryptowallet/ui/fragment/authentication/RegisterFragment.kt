@@ -59,7 +59,20 @@ class RegisterFragment : Fragment() {
             loadingDialog.isDismiss()
             if (it.isSuccessful) {
                 Log.d("Account Created", it?.isSuccessful.toString())
-                findNavController().navigate(R.id.action_registerFragment_to_generatePair)
+
+                val dialog = RegistrationDetailDialogFragment()
+                val bundle = Bundle()
+                bundle.putString(
+                    RegistrationDetailDialogFragment.PRIVATE_KEY_TAG,
+                    String(authenticationViewModel.keypair.secretSeed)
+                )
+                bundle.putString(
+                    RegistrationDetailDialogFragment.PUBLIC_KEY_TAG,
+                    authenticationViewModel.keypair.accountId
+                )
+                dialog.isCancelable = false
+                dialog.arguments = bundle
+                dialog.show(parentFragmentManager, "RegistrationDetailDialogFragment")
             } else {
                 Toast.makeText(
                     requireContext(),

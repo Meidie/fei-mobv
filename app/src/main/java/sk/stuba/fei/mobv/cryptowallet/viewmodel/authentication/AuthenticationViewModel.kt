@@ -38,9 +38,7 @@ class AuthenticationViewModel(
     val loginSuccessful: LiveData<OneTimeEvent>
         get() = _loginSuccessful
 
-    private val _keypair: MutableLiveData<ImportAccount> = MutableLiveData()
-    val keypair: LiveData<ImportAccount>
-        get() =  _keypair
+    lateinit var keypair: KeyPair
 
     private val _loadingResponse: MutableLiveData<String> = MutableLiveData()
     val loadingResponse: LiveData<String>
@@ -135,12 +133,10 @@ class AuthenticationViewModel(
                     _loadingResponse.postValue("loading")
                     val pair: KeyPair = KeyPair.random()
                     val response: Response<Void> = accountRepository.createAccount(pair.accountId)
-                    _keypair.postValue(ImportAccount(pair.accountId, pair.secretSeed.toString()))
-
+                    keypair = pair
                     if (response.isSuccessful) {
                         insertAccount(pair, pin)
                     }
-
                     _accountRegistrationResponse.postValue(response)
                 }
             }
@@ -199,7 +195,5 @@ class AuthenticationViewModel(
             }
         }
     }
-
-    data class ImportAccount(val publicKey: String, val privateKey: String) {}
 }
 

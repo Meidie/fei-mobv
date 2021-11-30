@@ -28,11 +28,6 @@
 
     </fragment>
     <fragment
-        android:id="@+id/accountPrintKeyPair"
-        android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.PrintKeyPairFragment"
-        android:label="Login"
-        tools:layout="@layout/fragment_account_print_keypair" />
-    <fragment
         android:id="@+id/registerFragment"
         android:name="sk.stuba.fei.mobv.cryptowallet.ui.fragment.authentication.RegisterFragment"
         android:label="Register new account"
@@ -42,13 +37,6 @@
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left" />
-        <action
-            android:id="@+id/action_registerFragment_to_generatePair"
-            app:destination="@id/accountPrintKeyPair"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right"
-            app:popUpTo="@+id/navigation"
-            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_registerFragment_to_importAccount"
             app:destination="@id/importAccount"

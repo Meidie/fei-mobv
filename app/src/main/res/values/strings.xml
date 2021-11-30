@@ -56,7 +56,7 @@
     <string name="continue_button">Continue</string>
     <string name="private_key">Private Key</string>
     <string name="public_key">Public Key</string>
-    <string name="please_save_your_private_and_public_keys">Please save your private and public keys</string>
+    <string name="please_save_your_private_and_public_keys">Please save your keys</string>
     <string name="loading">Loading…</string>
     <string name="log_in">Login</string>
     <string name="import_account">Import Account</string>

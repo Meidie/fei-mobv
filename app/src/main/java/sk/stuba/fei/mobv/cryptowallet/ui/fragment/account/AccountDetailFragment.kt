@@ -1,35 +1,26 @@
 package sk.stuba.fei.mobv.cryptowallet.ui.fragment.account
 
-import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.EditText
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
-import sk.stuba.fei.mobv.cryptowallet.databinding.AccountDialogBinding
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAccountDetailBinding
-import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentContactEditBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
-import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.account.AccountViewModelFactory
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModel
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.contact.ContactViewModelFactory
 
 class AccountDetailFragment : Fragment() {
 
@@ -68,7 +59,7 @@ class AccountDetailFragment : Fragment() {
                 Toast.makeText(
                     requireContext(),
                     "Public key copied to clipboard",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -112,7 +103,7 @@ class AccountDetailFragment : Fragment() {
                     val clipboardManager = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clipData = ClipData.newPlainText("private key", pk)
                     clipboardManager.setPrimaryClip(clipData)
-                    Toast.makeText(requireContext(),"Private key copied to clipboard",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),"Private key copied to clipboard",Toast.LENGTH_SHORT).show()
                 }
 
                 binding.privateKeyText.setText(pk)
