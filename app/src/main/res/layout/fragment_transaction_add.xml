@@ -36,9 +36,10 @@
 
             <AutoCompleteTextView
                 android:id="@+id/contactSelect"
+                android:labelFor="@id/contactSelect"
                 android:layout_width="match_parent"
-                android:inputType="none"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -94,48 +95,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/publicKeyLayout"
             app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
-            app:errorText="@{viewModel.amountError.message}"
+            app:errorText="@{viewModel.amountError.getFormattedMessage(viewModel.maxAmount)}"
             android:textColorHint="#757575">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/amount"
-                android:afterTextChanged="@{(text) -> viewModel.onAmountChanged(text)}"
-                android:text="@={viewModel.amount}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned" />
+                android:afterTextChanged="@{(text) -> viewModel.onAmountChanged(text)}"
+                android:inputType="numberSigned"
+                android:text="@={viewModel.amount}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/pinLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:enabled="@{viewModel.actionsEnabled}"
             android:hint="@string/enter_pin"
-            app:helperText="*Required"
             android:minHeight="48dp"
             app:endIconMode="password_toggle"
             app:errorEnabled="true"
-            android:enabled="@{viewModel.actionsEnabled}"
             app:errorIconDrawable="@drawable/ic_error"
+            app:errorText="@{viewModel.pinError.message}"
+            app:helperText="*Required"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/amountLayout"
-            app:startIconDrawable="@drawable/ic_baseline_lock_24"
-            app:errorText="@{viewModel.pinError.message}">
+            app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pin"
-                android:text="@={viewModel.pin}"
-                android:afterTextChanged="@{(text) -> viewModel.onPinChanged(text)}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:afterTextChanged="@{(text) -> viewModel.onPinChanged(text)}"
                 android:inputType="numberPassword"
-                android:textColorHint="#757575"/>
+                android:text="@={viewModel.pin}"
+                android:textColorHint="#757575" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

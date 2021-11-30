@@ -44,8 +44,9 @@ class TransactionViewModel(
 
     private var selectedContact : Contact? = null
     private var  stellarAccount: AccountResponse? = null
-    lateinit var maxAmount: String
-    lateinit var activeAccount: Account
+    private lateinit var activeAccount: Account
+    var maxAmount: String? = null
+
 
     private val _progressBarVisible: MutableLiveData<Boolean> = MutableLiveData(false)
     val progressBarVisible: LiveData<Boolean>
@@ -157,7 +158,10 @@ class TransactionViewModel(
     }
 
     fun onAmountChanged(text: Editable?) {
-        if (!text.isNullOrEmpty() && amountError.get()!! != FormError.NO_ERROR) {
+        val mAmount = maxAmount
+        if (!text.isNullOrEmpty() && mAmount != null && text.toString().toFloat() > mAmount.toFloat()) {
+            amountError.set(FormError.ACCOUNT_BALANCE_EXCEEDED)
+        } else if (!text.isNullOrEmpty() && amountError.get()!! != FormError.NO_ERROR) {
             amountError.set(FormError.NO_ERROR)
         }
     }
@@ -210,9 +214,10 @@ class TransactionViewModel(
     }
 
     private fun validateAmount(amount: String) {
+        val mAmount = maxAmount
         if (amount.startsWith("-")) {
             amountError.set(FormError.NEGATIVE_VALUE)
-        } else if(amount.toFloat() > maxAmount.toFloat()){
+        } else if(mAmount != null && amount.toFloat() > mAmount.toFloat()){
             amountError.set(FormError.ACCOUNT_BALANCE_EXCEEDED)
         }
     }
