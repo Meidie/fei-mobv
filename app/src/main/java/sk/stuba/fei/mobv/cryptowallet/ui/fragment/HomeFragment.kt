@@ -43,7 +43,7 @@ class HomeFragment : Fragment() {
         })
 
         binding.refreshLayout.setOnRefreshListener {
-            balanceViewModel.updateBalances()
+            balanceViewModel.syncBalances()
         }
 
         setHasOptionsMenu(true)
@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
         when (item.itemId) {
             R.id.sync_menu -> {
                 binding.refreshLayout.isRefreshing = true
-                balanceViewModel.updateBalances()
+                balanceViewModel.syncBalances()
             }
             else -> return super.onOptionsItemSelected(item)
         }
