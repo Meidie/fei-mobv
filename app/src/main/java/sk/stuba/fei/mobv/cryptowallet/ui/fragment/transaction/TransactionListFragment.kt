@@ -78,6 +78,12 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
                         )
                     )
                 }
+
+                if(transactions.isEmpty()){
+                    binding.refreshLayout.isRefreshing = true
+                    transactionViewModel.syncTransactions()
+                }
+
                 adapter.submitList(transactions.sortedByDescending { t ->
                     LocalDateTime.parse(t.transaction.dateTime, DateTimeFormatter.ISO_DATE_TIME)
                 })
