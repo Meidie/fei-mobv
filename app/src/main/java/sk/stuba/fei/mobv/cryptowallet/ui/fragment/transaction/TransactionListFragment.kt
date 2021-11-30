@@ -19,6 +19,8 @@ import sk.stuba.fei.mobv.cryptowallet.ui.adapter.TransactionListAdapter
 import sk.stuba.fei.mobv.cryptowallet.util.visible
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction.TransactionViewModel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
 
@@ -74,8 +76,9 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
                         )
                     )
                 }
-
-                adapter.submitList(transactions.sortedBy { t -> t.transaction.dateTime }.reversed())
+                adapter.submitList(transactions.sortedBy { t ->
+                    LocalDateTime.parse(t.transaction.dateTime, DateTimeFormatter.ISO_DATE_TIME)
+                }.reversed())
             })
         })
 

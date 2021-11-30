@@ -1,6 +1,5 @@
 package sk.stuba.fei.mobv.cryptowallet.viewmodel.balance
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +40,7 @@ class BalanceViewModel(
         stellarAccount = accountRepository.getAccountInfo(activeAccount.publicKey)
         if (stellarAccount != null) {
             for (balance in stellarAccount!!.balances) {
-                balanceRepository.updateBalances(balance.balance, balance.assetType)
+                balanceRepository.updateBalances(balance.balance, balance.assetType, activeAccount.accountId)
             }
         }
     }

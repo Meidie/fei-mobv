@@ -76,7 +76,7 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
         if (response != null) {
             val newTransaction = Transaction(response.hash, sourceAccount.accountId, amount,
                 TransactionType.DEBET, publicKey,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy"))
+                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
             )
             dao.insert(newTransaction)
         }

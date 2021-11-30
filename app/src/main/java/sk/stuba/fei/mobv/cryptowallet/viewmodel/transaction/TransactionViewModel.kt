@@ -88,13 +88,11 @@ class TransactionViewModel(
                     if(response!= null && response.isSuccess){
                         _transactionSentAction.postValue(
                             Triple(true, "Transaction  sent successfully",
-                                R.id.action_transactionAddFragment_to_transactionListFragment
-                            )
+                                R.id.action_transactionAddFragment_to_transactionListFragment)
                         )
                     } else {
                         _transactionSentAction.postValue(
-                            Triple(false, "Something went wrong!", -1
-                            )
+                            Triple(false, "Something went wrong!", -1)
                         )
                     }
 

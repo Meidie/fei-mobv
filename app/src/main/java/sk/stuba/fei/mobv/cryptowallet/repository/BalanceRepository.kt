@@ -26,7 +26,7 @@ class BalanceRepository(private val dao: BalanceDao) : IRepository<Balance> {
         return dao.getAllBalances()
     }
 
-    fun updateBalances(amount: String, currency: String) {
-        return dao.updateAmount(amount, currency)
+    fun updateBalances(amount: String, currency: String, accountId: Long) {
+        return dao.updateAmount(amount, currency, accountId)
     }
 }
