@@ -1,6 +1,6 @@
-package sk.stuba.fei.mobv.cryptowallet.ui.home.adapter
+package sk.stuba.fei.mobv.cryptowallet.ui.adapter
 
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -23,6 +23,7 @@ class HomeAdapter: ListAdapter<Balance, HomeAdapter.BalanceRowViewHolder>(
             }
         }
 
+        @SuppressLint("SetTextI18n")
         fun bind(currentItem: Balance) {
             binding.balance.text = currentItem.amount.dropLast(3)
             if (currentItem.currency == "native"){

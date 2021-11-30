@@ -1,17 +1,17 @@
 package sk.stuba.fei.mobv.cryptowallet.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentHomeBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
-import sk.stuba.fei.mobv.cryptowallet.ui.home.adapter.HomeAdapter
+import sk.stuba.fei.mobv.cryptowallet.ui.adapter.HomeAdapter
+import sk.stuba.fei.mobv.cryptowallet.util.visible
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.balance.BalanceViewModel
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.balance.BalanceViewModelFactory
 
@@ -37,6 +37,16 @@ class HomeFragment : Fragment() {
                 BalanceRepository(database.balanceDao()))
         )[BalanceViewModel::class.java]
 
+        // balances sync
+        balanceViewModel.balancesSynced.observe(viewLifecycleOwner, {
+            binding.refreshLayout.isRefreshing = false
+        })
+
+        binding.refreshLayout.setOnRefreshListener {
+            balanceViewModel.updateBalances()
+        }
+
+        setHasOptionsMenu(true)
         balanceViewModel.updateBalances()
 
         val adapter = HomeAdapter()
@@ -45,11 +55,11 @@ class HomeFragment : Fragment() {
             it?.let {
 
                 if (it.isEmpty()) {
-                    binding.recyclerViewer.visibility = View.GONE
-                    binding.emptyView.visibility = View.VISIBLE
+                    binding.recyclerViewer.visible(false)
+                    binding.emptyView.visible(true)
                 } else {
-                    binding.recyclerViewer.visibility = View.VISIBLE
-                    binding.emptyView.visibility = View.GONE
+                    binding.recyclerViewer.visible(true)
+                    binding.emptyView.visible(false)
                 }
 
                 adapter.submitList(it.sortedBy { t -> t.balanceId })
@@ -57,6 +67,21 @@ class HomeFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.sync_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sync_menu -> {
+                binding.refreshLayout.isRefreshing = true
+                balanceViewModel.updateBalances()
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     override fun onDestroy() {

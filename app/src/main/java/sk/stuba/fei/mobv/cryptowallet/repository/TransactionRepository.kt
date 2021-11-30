@@ -67,13 +67,12 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
             .build()
 
         val sk = Crypto().decrypt(sourceAccount.privateKeyData!!, pin)
-        Log.d("STELLAR API", sk)
         val source: KeyPair = KeyPair.fromSecretSeed(sk)
         newStellarTransaction.sign(source)
 
         val response = api.sendTransaction(newStellarTransaction)
 
-        if (response != null) {
+        if (response!= null && response.isSuccess) {
             val newTransaction = Transaction(response.hash, sourceAccount.accountId, amount,
                 TransactionType.DEBET, publicKey,
                 LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)

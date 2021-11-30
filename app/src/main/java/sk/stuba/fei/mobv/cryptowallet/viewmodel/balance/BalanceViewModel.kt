@@ -1,5 +1,7 @@
 package sk.stuba.fei.mobv.cryptowallet.viewmodel.balance
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +11,7 @@ import sk.stuba.fei.mobv.cryptowallet.database.entity.Account
 import sk.stuba.fei.mobv.cryptowallet.database.entity.Balance
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
+import sk.stuba.fei.mobv.cryptowallet.util.OneTimeEvent
 
 class BalanceViewModel(
     private val accountRepository: AccountRepository,
@@ -18,6 +21,10 @@ class BalanceViewModel(
     val allBalances = balanceRepository.getAllBalances()
     private var  stellarAccount: AccountResponse? = null
     lateinit var activeAccount: Account
+
+    private val _balancesSynced: MutableLiveData<OneTimeEvent> = MutableLiveData()
+    val balancesSynced: LiveData<OneTimeEvent>
+        get() = _balancesSynced
 
     init {
         updateBalances()
@@ -42,6 +49,8 @@ class BalanceViewModel(
             for (balance in stellarAccount!!.balances) {
                 balanceRepository.updateBalances(balance.balance, balance.assetType, activeAccount.accountId)
             }
+
+            _balancesSynced.postValue(OneTimeEvent())
         }
     }
 

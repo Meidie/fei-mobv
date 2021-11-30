@@ -8,7 +8,6 @@ import org.stellar.sdk.responses.SubmitTransactionResponse
 import org.stellar.sdk.responses.operations.OperationResponse
 import java.util.ArrayList
 
-
 class StellarApi {
 
     fun getAccount(accountId: String): AccountResponse? {
@@ -17,7 +16,7 @@ class StellarApi {
             val server = Server(RemoteDataSource.TESTNET_STELLAR_BASE_URL)
             server.accounts().account(accountId)
         }.onSuccess {
-            Log.d("STELLAR API", "Getting account $accountId was successful")
+            Log.d("STELLAR API", "Getting account $accountId request was successful")
         }.onFailure {
             Log.e(
                 "STELLAR API",
@@ -33,7 +32,7 @@ class StellarApi {
             val data = paymentsRequest.execute()
            data.records
         }.onSuccess {
-            Log.d("STELLAR API", "Getting transactions was successful")
+            Log.d("STELLAR API", "Getting transactions request was successful")
         }.onFailure {
             Log.e(
                 "STELLAR API",
@@ -42,21 +41,17 @@ class StellarApi {
         }.getOrNull()
     }
 
-    fun getBalance() {
-
-    }
-
     fun sendTransaction(transaction: Transaction): SubmitTransactionResponse? {
 
         return runCatching {
             val server = Server(RemoteDataSource.TESTNET_STELLAR_BASE_URL)
             server.submitTransaction(transaction)
         }.onSuccess {
-            Log.d("STELLAR API", "Add transaction was successful")
+            Log.d("STELLAR API", "Transaction sent request was successful")
         }.onFailure {
             Log.e(
                 "STELLAR API",
-                "Error trying to add transaction, error: ${it.localizedMessage}"
+                "Error trying to send transaction, error: ${it.localizedMessage}"
             )
         }.getOrNull()
     }

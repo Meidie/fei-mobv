@@ -78,9 +78,9 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
                         )
                     )
                 }
-                adapter.submitList(transactions.sortedBy { t ->
+                adapter.submitList(transactions.sortedByDescending { t ->
                     LocalDateTime.parse(t.transaction.dateTime, DateTimeFormatter.ISO_DATE_TIME)
-                }.reversed())
+                })
             })
         })
 
