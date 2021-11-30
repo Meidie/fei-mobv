@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -43,7 +44,13 @@ class LoginActiveFragment : Fragment() {
         binding.viewModel = authenticationViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        authenticationViewModel.loginSuccessful.observe(viewLifecycleOwner, {
+        authenticationViewModel.pinError.observe(viewLifecycleOwner, {
+            if(it.message.isNotEmpty()){
+                Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+            }
+        })
+
+        authenticationViewModel.loginResult.observe(viewLifecycleOwner, {
             findNavController().navigate(R.id.action_global_homeFragment)
         })
 

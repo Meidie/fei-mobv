@@ -49,7 +49,7 @@
             app:errorEnabled="true"
             app:errorIconDrawable="@drawable/ic_error"
             app:errorText="@{viewModel.keyError.message}"
-            app:errorTextColor="@color/errorDark"
+            app:errorTextColor="@color/white"
             app:helperText="*Required"
             app:helperTextTextColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,6 +61,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addKeyText"
                 android:layout_width="match_parent"
+                android:afterTextChanged="@{(text) -> viewModel.onPrivateKeyChanged(text)}"
                 android:text="@={viewModel.privateKey}"
                 android:layout_height="wrap_content"
                 android:background="@color/white"

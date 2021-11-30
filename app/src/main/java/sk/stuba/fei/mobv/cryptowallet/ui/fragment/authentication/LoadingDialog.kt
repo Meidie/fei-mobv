@@ -5,16 +5,17 @@ import sk.stuba.fei.mobv.cryptowallet.MainActivity
 import sk.stuba.fei.mobv.cryptowallet.R
 
 class LoadingDialog(private val mainActivity: MainActivity) {
-    private lateinit var isDialog: AlertDialog
+    private lateinit var loadingDialog: AlertDialog
 
     fun startLoading() {
         val dialogView = mainActivity.layoutInflater.inflate(R.layout.loading_dialog, null)
-        isDialog =
-            AlertDialog.Builder(mainActivity).setView(dialogView).setCancelable(false).create()
-        isDialog.show()
+        loadingDialog =
+            AlertDialog.Builder(mainActivity, R.style.WrapContentDialog).setView(dialogView)
+                .setCancelable(false).create()
+        loadingDialog.show()
     }
 
-    fun isDismiss() {
-        isDialog.dismiss()
+    fun dismissLoading() {
+        loadingDialog.dismiss()
     }
 }

@@ -13,7 +13,6 @@ class SecretKeyGenerator(
 ) {
 
     fun generateSecretKey(pin: String): Key {
-
         val salt = ByteArray(saltLength)
         SecureRandom().nextBytes(salt)
         val pbKeySpec = PBEKeySpec(pin.toCharArray(), salt, 1324, keyLength)

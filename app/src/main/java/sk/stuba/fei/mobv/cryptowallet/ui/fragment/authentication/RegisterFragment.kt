@@ -51,12 +51,18 @@ class RegisterFragment : Fragment() {
             findNavController().navigate(R.id.action_registerFragment_to_importAccount)
         }
 
-        authenticationViewModel.loadingResponse.observe(viewLifecycleOwner, {
+        authenticationViewModel.startLoading.observe(viewLifecycleOwner, {
             loadingDialog.startLoading()
         })
 
+        authenticationViewModel.pinError.observe(viewLifecycleOwner, {
+            if(it.message.isNotEmpty()){
+                Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+            }
+        })
+
         authenticationViewModel.accountRegistrationResponse.observe(viewLifecycleOwner, {
-            loadingDialog.isDismiss()
+            loadingDialog.dismissLoading()
             if (it.isSuccessful) {
                 Log.d("Account Created", it?.isSuccessful.toString())
 

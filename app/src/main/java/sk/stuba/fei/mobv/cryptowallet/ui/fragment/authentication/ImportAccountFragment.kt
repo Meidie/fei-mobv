@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -48,12 +49,18 @@ class ImportAccountFragment : Fragment() {
             findNavController().navigate(R.id.action_importAccount_to_loginFragment)
         }
 
-        authenticationViewModel.loadingResponse.observe(viewLifecycleOwner, {
+        authenticationViewModel.pinError.observe(viewLifecycleOwner, {
+            if(it.message.isNotEmpty()){
+                Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+            }
+        })
+
+        authenticationViewModel.startLoading.observe(viewLifecycleOwner, {
             loadingDialog.startLoading()
         })
 
-        authenticationViewModel.loginSuccessful.observe(viewLifecycleOwner, {
-            loadingDialog.isDismiss()
+        authenticationViewModel.loginResult.observe(viewLifecycleOwner, {
+            loadingDialog.dismissLoading()
             findNavController().navigate(R.id.action_global_homeFragment)
         })
 
