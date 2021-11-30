@@ -14,6 +14,7 @@ import sk.stuba.fei.mobv.cryptowallet.api.StellarApi
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionAddBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
+import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.util.visible
@@ -37,6 +38,7 @@ class TransactionAddFragment : Fragment() {
             TransactionViewModelFactory(
                 TransactionRepository(database.transactionDao(), StellarApi()),
                 AccountRepository(database.accountDao(), StellarApi()),
+                BalanceRepository(database.balanceDao()),
                 ContactRepository(database.contactDao())
             )
         )[TransactionViewModel::class.java]

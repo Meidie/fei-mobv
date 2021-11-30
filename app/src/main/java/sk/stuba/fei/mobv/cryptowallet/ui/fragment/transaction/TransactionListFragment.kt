@@ -13,6 +13,7 @@ import sk.stuba.fei.mobv.cryptowallet.database.entity.Contact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentTransactionListBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
+import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.ui.adapter.TransactionListAdapter
@@ -44,6 +45,7 @@ class TransactionListFragment : Fragment(R.layout.fragment_transaction_list) {
             TransactionViewModelFactory(
                 TransactionRepository(database.transactionDao(), StellarApi()),
                 AccountRepository(database.accountDao(), StellarApi()),
+                BalanceRepository(database.balanceDao()),
                 ContactRepository(database.contactDao())
             )
         )[TransactionViewModel::class.java]

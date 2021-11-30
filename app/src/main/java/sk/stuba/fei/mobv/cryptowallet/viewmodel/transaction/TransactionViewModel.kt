@@ -1,6 +1,7 @@
 package sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction
 
 import android.text.Editable
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +13,7 @@ import org.stellar.sdk.responses.AccountResponse
 import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.database.entity.*
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
+import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.ContactRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.TransactionRepository
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
@@ -21,6 +23,7 @@ import sk.stuba.fei.mobv.cryptowallet.util.OneTimeEvent
 class TransactionViewModel(
     private val transactionRepository: TransactionRepository,
     private val accountRepository: AccountRepository,
+    private val balanceRepository: BalanceRepository,
     contactRepository: ContactRepository) : ViewModel() {
 
     val keyError = ObservableField<FormError>()
@@ -90,6 +93,14 @@ class TransactionViewModel(
                             Triple(true, "Transaction  sent successfully",
                                 R.id.action_transactionAddFragment_to_transactionListFragment)
                         )
+
+                        val updatedAccount = accountRepository.getAccountInfo(activeAccount.publicKey)
+
+                        for (balance in updatedAccount!!.balances) {
+                            Log.d("balance", balance.balance)
+                            balanceRepository.updateBalances(balance.balance, balance.assetType, activeAccount.accountId)
+                        }
+
                     } else {
                         _transactionSentAction.postValue(
                             Triple(false, "Something went wrong!", -1)
