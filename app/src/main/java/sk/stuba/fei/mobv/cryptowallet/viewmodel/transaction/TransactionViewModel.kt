@@ -2,6 +2,7 @@ package sk.stuba.fei.mobv.cryptowallet.viewmodel.transaction
 
 import android.text.Editable
 import android.util.Log
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,6 +30,7 @@ class TransactionViewModel(
     val keyError = ObservableField<FormError>()
     val amountError = ObservableField<FormError>()
     val pinError = ObservableField<FormError>()
+    var actionsEnabled: ObservableBoolean = ObservableBoolean(true)
 
     val allTransactionAndContact: LiveData<List<TransactionAndContact>> =
         transactionRepository.getAllTransactionAndContact()
@@ -42,6 +44,7 @@ class TransactionViewModel(
 
     private var selectedContact : Contact? = null
     private var  stellarAccount: AccountResponse? = null
+    lateinit var maxAmount: String
     lateinit var activeAccount: Account
 
     private val _progressBarVisible: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -71,46 +74,51 @@ class TransactionViewModel(
         transactionRepository.insert(transaction)
     }
 
-    // TODO doplniť možnosť zadať maximálne current balance (asi by bolo fajn aj niekde zobrazit aktualny kapital)
-    // TODO overenie existenie PK na ktory posielame
     fun sendTransaction() {
+
+        actionsEnabled.set(false)
 
         val sAccount = stellarAccount
         val amount = amount.get()
         val pk = publicKey.get()
         val pin = pin.get()
 
-
         if(isFormValid(pk, amount, pin)){
+
             sAccount?.let {
                 viewModelScope.launch(Dispatchers.IO) {
 
-                    _progressBarVisible.postValue(true)
-                   val response = transactionRepository.sendTransaction(activeAccount, it, amount!!.replace(",","."),  pk!!, pin!!)
+                    if(accountRepository.getAccountInfo(pk!!) != null){
+                        _progressBarVisible.postValue(true)
+                        val response = transactionRepository.sendTransaction(activeAccount, it, amount!!.replace(",","."),  pk, pin!!)
 
-                    if(response!= null && response.isSuccess){
-                        _transactionSentAction.postValue(
-                            Triple(true, "Transaction  sent successfully",
-                                R.id.action_transactionAddFragment_to_transactionListFragment)
-                        )
+                        if(response!= null && response.isSuccess){
+                            _transactionSentAction.postValue(
+                                Triple(true, "Transaction  sent successfully",
+                                    R.id.action_transactionAddFragment_to_transactionListFragment)
+                            )
 
-                        val updatedAccount = accountRepository.getAccountInfo(activeAccount.publicKey)
+                            val updatedAccount = accountRepository.getAccountInfo(activeAccount.publicKey)
 
-                        for (balance in updatedAccount!!.balances) {
-                            Log.d("balance", balance.balance)
-                            balanceRepository.updateBalances(balance.balance, balance.assetType, activeAccount.accountId)
+                            for (balance in updatedAccount!!.balances) {
+                                Log.d("balance", balance.balance)
+                                balanceRepository.updateBalances(balance.balance, balance.assetType, activeAccount.accountId)
+                            }
+
+                        } else {
+                            _transactionSentAction.postValue(
+                                Triple(false, "Something went wrong!", -1)
+                            )
                         }
-
                     } else {
-                        _transactionSentAction.postValue(
-                            Triple(false, "Something went wrong!", -1)
-                        )
+                        keyError.set(FormError.STELLAR_ACCOUNT_NOT_FOUND)
                     }
-
+                    actionsEnabled.set(true)
                     _progressBarVisible.postValue(false)
                 }
             }
         } else {
+            actionsEnabled.set(true)
             _transactionSentAction.postValue(Triple(false, "Please fill all fields correctly", -1))
         }
     }
@@ -204,15 +212,9 @@ class TransactionViewModel(
     private fun validateAmount(amount: String) {
         if (amount.startsWith("-")) {
             amountError.set(FormError.NEGATIVE_VALUE)
-        } else if(amount.contains(",")) {
-            amountError.set(FormError.INCORRECT_CHAR)
+        } else if(amount.toFloat() > maxAmount.toFloat()){
+            amountError.set(FormError.ACCOUNT_BALANCE_EXCEEDED)
         }
-        // TODO: zapojit max
-//        else if(amount.toFloat() > 100){
-//            val error = FormError.ACCOUNT_BALANCE_EXCEEDED
-//            error.message += "123"
-//            amountError.set(error)
-//        }
     }
 
     private fun validatePin(pin: String) {
@@ -226,5 +228,6 @@ class TransactionViewModel(
     private fun getAccount() = viewModelScope.launch(Dispatchers.IO){
         activeAccount = accountRepository.getActiveAccount()
         stellarAccount = accountRepository.getAccountInfo(activeAccount.publicKey)
+        maxAmount = balanceRepository.getBalance("native")
     }
 }

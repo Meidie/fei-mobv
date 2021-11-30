@@ -1,6 +1,5 @@
 package sk.stuba.fei.mobv.cryptowallet.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import org.stellar.sdk.AssetTypeNative
 import org.stellar.sdk.KeyPair
@@ -19,6 +18,7 @@ import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionAndContact
 import sk.stuba.fei.mobv.cryptowallet.database.entity.TransactionType
 import sk.stuba.fei.mobv.cryptowallet.security.Crypto
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.ArrayList
 
@@ -75,12 +75,17 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
         if (response!= null && response.isSuccess) {
             val newTransaction = Transaction(response.hash, sourceAccount.accountId, amount,
                 TransactionType.DEBET, publicKey,
-                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
+                LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
             )
             dao.insert(newTransaction)
         }
 
         return response
+    }
+
+    private fun parseDate(createdAt: String): String {
+        val dateTime: LocalDateTime = LocalDateTime.parse(createdAt, DateTimeFormatter.ISO_DATE_TIME)
+        return dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
     }
 
     suspend fun syncTransactions(account: Account): ArrayList<OperationResponse>? {
@@ -90,7 +95,7 @@ class TransactionRepository(private val dao: TransactionDao, private val api: St
 
             val transaction = Transaction(
                 it.transactionHash, account.accountId, "",
-                TransactionType.DEBET, "", it.createdAt
+                TransactionType.DEBET, "", parseDate(it.createdAt)
             )
 
             if (it is CreateAccountOperationResponse) {

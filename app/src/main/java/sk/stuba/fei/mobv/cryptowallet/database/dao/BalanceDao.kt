@@ -21,5 +21,5 @@ interface BalanceDao : IDao<Balance> {
     fun updateAmount(amount: String, currency: String, accountId: Long)
 
     @Query("SELECT amount FROM balance_table WHERE account_owner_id = ( select accountId from account_table where active_account) AND currency = :currency")
-    fun getAmount(currency: String): LiveData<String>
+    fun getAmount(currency: String): String
 }

@@ -29,4 +29,8 @@ class BalanceRepository(private val dao: BalanceDao) : IRepository<Balance> {
     fun updateBalances(amount: String, currency: String, accountId: Long) {
         return dao.updateAmount(amount, currency, accountId)
     }
+
+    fun getBalance(currency: String): String {
+        return dao.getAmount(currency)
+    }
 }
