@@ -28,7 +28,7 @@ class StellarApi {
     fun getTransactions(accountId: String) : ArrayList<OperationResponse>? {
         return runCatching {
             val server = Server(RemoteDataSource.TESTNET_STELLAR_BASE_URL)
-            val paymentsRequest = server.payments().forAccount(accountId)
+            val paymentsRequest = server.payments().forAccount(accountId).limit(200)
             val data = paymentsRequest.execute()
            data.records
         }.onSuccess {
