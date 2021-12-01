@@ -15,8 +15,8 @@ import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAccountImportBinding
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModelFactory
 
 
 class ImportAccountFragment : Fragment() {
@@ -61,7 +61,12 @@ class ImportAccountFragment : Fragment() {
 
         authenticationViewModel.loginResult.observe(viewLifecycleOwner, {
             loadingDialog.dismissLoading()
-            findNavController().navigate(R.id.action_global_homeFragment)
+            if (it.equals(AuthenticationViewModel.LoginState.SUCCESSFUL)) {
+                findNavController().navigate(R.id.action_global_homeFragment)
+            } else {
+                Toast.makeText(requireContext(), "Unable to login", Toast.LENGTH_LONG)
+                    .show()
+            }
         })
 
         return binding.root

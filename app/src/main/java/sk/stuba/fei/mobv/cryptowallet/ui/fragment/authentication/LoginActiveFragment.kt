@@ -12,11 +12,10 @@ import sk.stuba.fei.mobv.cryptowallet.R
 import sk.stuba.fei.mobv.cryptowallet.api.RemoteDataSource
 import sk.stuba.fei.mobv.cryptowallet.database.AppDatabase
 import sk.stuba.fei.mobv.cryptowallet.databinding.FragmentAccountActiveLoginBinding
-
 import sk.stuba.fei.mobv.cryptowallet.repository.AccountRepository
 import sk.stuba.fei.mobv.cryptowallet.repository.BalanceRepository
-import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModelFactory
 import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModel
+import sk.stuba.fei.mobv.cryptowallet.viewmodel.authentication.AuthenticationViewModelFactory
 
 class LoginActiveFragment : Fragment() {
 
@@ -51,7 +50,12 @@ class LoginActiveFragment : Fragment() {
         })
 
         authenticationViewModel.loginResult.observe(viewLifecycleOwner, {
-            findNavController().navigate(R.id.action_global_homeFragment)
+            if (it.equals(AuthenticationViewModel.LoginState.SUCCESSFUL)) {
+                findNavController().navigate(R.id.action_global_homeFragment)
+            } else {
+                Toast.makeText(requireContext(), "Unable to login", Toast.LENGTH_LONG)
+                    .show()
+            }
         })
 
         authenticationViewModel.signedOut.observe(viewLifecycleOwner, {
