@@ -15,7 +15,8 @@ enum class FormError(var message: String) {
     ACCOUNT_NOT_FOUND("Account does not exist in our database"),
     ACCOUNT_BALANCE_EXCEEDED("Balance exceeded, maximum is: %s"),
     STELLAR_ACCOUNT_NOT_FOUND("Account does not exist."),
-    ZERO_NOT_ALLOWED("Zero is not allowed!");
+    ZERO_NOT_ALLOWED("Zero is not allowed!"),
+    INVALID_FORMAT("Invalid format");
 
     fun getFormattedMessage(value: String?): String {
         return String.format(this.message, value)

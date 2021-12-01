@@ -159,15 +159,20 @@ class TransactionViewModel(
 
     fun onAmountChanged(text: Editable?) {
         val mAmount = maxAmount
-        if(!text.isNullOrEmpty() && text.contains("-")){
-            amountError.set(FormError.NEGATIVE_VALUE)
-        } else if(!text.isNullOrEmpty() && text.toString().toFloat() > 0.0) {
-            amountError.set(FormError.ZERO_NOT_ALLOWED)
-        } else if (!text.isNullOrEmpty() && mAmount != null && text.toString().toFloat() > mAmount.toFloat()) {
-            amountError.set(FormError.ACCOUNT_BALANCE_EXCEEDED)
-        } else if (amountError.get()!! != FormError.NO_ERROR) {
-            amountError.set(FormError.NO_ERROR)
+        runCatching {
+            if(!text.isNullOrEmpty() && text.contains("-")){
+                amountError.set(FormError.NEGATIVE_VALUE)
+            } else if(!text.isNullOrEmpty() && !(text.toString().toFloat() > 0.0)) {
+                amountError.set(FormError.ZERO_NOT_ALLOWED)
+            } else if (!text.isNullOrEmpty() && mAmount != null && text.toString().toFloat() > mAmount.toFloat()) {
+                amountError.set(FormError.ACCOUNT_BALANCE_EXCEEDED)
+            } else if (amountError.get()!! != FormError.NO_ERROR) {
+                amountError.set(FormError.NO_ERROR)
+            }
+        }.onFailure {
+            amountError.set(FormError.INVALID_FORMAT)
         }
+
     }
 
     fun onPinChanged(text: Editable?) {
