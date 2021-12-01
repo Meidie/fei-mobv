@@ -63,9 +63,6 @@ class LoginFragment : Fragment() {
             loadingDialog.dismissLoading()
             if (it.equals(AuthenticationViewModel.LoginState.SUCCESSFUL)) {
                 findNavController().navigate(R.id.action_global_homeFragment)
-            } else {
-                Toast.makeText(requireContext(), "Unable to login", Toast.LENGTH_LONG)
-                    .show()
             }
         })
 
